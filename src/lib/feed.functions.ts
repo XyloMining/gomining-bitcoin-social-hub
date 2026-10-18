@@ -28,7 +28,7 @@ async function youtube(): Promise<FeedPost[]> {
   if (!res.ok) return [];
   const xml = await res.text();
   return [...xml.matchAll(/<entry>([\s\S]*?)<\/entry>/g)].map((m) => {
-    const e = m[1];
+    const e = m[1] ?? "";
     const id = e.match(/<yt:videoId>(.*?)<\/yt:videoId>/)?.[1] ?? "";
     return {
       id: `yt-${id}`,

@@ -23,7 +23,7 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const { data: posts } = useSuspenseQuery(postsQuery);
-  const gm = referrals[0];
+  const gm = referrals[0]!;
   return (
     <div className="min-h-screen">
       <Header />
