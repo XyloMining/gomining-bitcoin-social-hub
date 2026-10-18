@@ -6,7 +6,7 @@ export type FeedPost = {
   title: string;
   url: string;
   date: string;
-  thumbnail?: string;
+  thumbnail?: string | undefined;
 };
 
 const YT_CHANNEL = "UCXUPLb9x-nzQb-0H3A5WVow";
