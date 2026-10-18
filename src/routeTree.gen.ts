@@ -12,6 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as FeedRouteImport } from './routes/feed'
 import { Route as ReferralsRouteImport } from './routes/referrals'
+import { Route as FeedIndexRouteImport } from './routes/feed.index'
+import { Route as FeedTiktokRouteImport } from './routes/feed.tiktok'
+import { Route as FeedXRouteImport } from './routes/feed.x'
+import { Route as FeedYoutubeRouteImport } from './routes/feed.youtube'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,34 +32,81 @@ const ReferralsRoute = ReferralsRouteImport.update({
   path: '/referrals',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FeedIndexRoute = FeedIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => FeedRoute,
+} as any)
+const FeedTiktokRoute = FeedTiktokRouteImport.update({
+  id: '/tiktok',
+  path: '/tiktok',
+  getParentRoute: () => FeedRoute,
+} as any)
+const FeedXRoute = FeedXRouteImport.update({
+  id: '/x',
+  path: '/x',
+  getParentRoute: () => FeedRoute,
+} as any)
+const FeedYoutubeRoute = FeedYoutubeRouteImport.update({
+  id: '/youtube',
+  path: '/youtube',
+  getParentRoute: () => FeedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/feed': typeof FeedRoute
+  '/feed': typeof FeedRouteWithChildren
   '/referrals': typeof ReferralsRoute
+  '/feed/tiktok': typeof FeedTiktokRoute
+  '/feed/x': typeof FeedXRoute
+  '/feed/youtube': typeof FeedYoutubeRoute
+  '/feed/': typeof FeedIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/feed': typeof FeedRoute
   '/referrals': typeof ReferralsRoute
+  '/feed/tiktok': typeof FeedTiktokRoute
+  '/feed/x': typeof FeedXRoute
+  '/feed/youtube': typeof FeedYoutubeRoute
+  '/feed': typeof FeedIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/feed': typeof FeedRoute
+  '/feed': typeof FeedRouteWithChildren
   '/referrals': typeof ReferralsRoute
+  '/feed/tiktok': typeof FeedTiktokRoute
+  '/feed/x': typeof FeedXRoute
+  '/feed/youtube': typeof FeedYoutubeRoute
+  '/feed/': typeof FeedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/feed' | '/referrals'
+  fullPaths:
+    | '/'
+    | '/feed'
+    | '/referrals'
+    | '/feed/tiktok'
+    | '/feed/x'
+    | '/feed/youtube'
+    | '/feed/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/feed' | '/referrals'
-  id: '__root__' | '/' | '/feed' | '/referrals'
+  to:
+    '/' | '/referrals' | '/feed/tiktok' | '/feed/x' | '/feed/youtube' | '/feed'
+  id:
+    | '__root__'
+    | '/'
+    | '/feed'
+    | '/referrals'
+    | '/feed/tiktok'
+    | '/feed/x'
+    | '/feed/youtube'
+    | '/feed/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  FeedRoute: typeof FeedRoute
+  FeedRoute: typeof FeedRouteWithChildren
   ReferralsRoute: typeof ReferralsRoute
 }
 
@@ -82,12 +133,56 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReferralsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/feed/': {
+      id: '/feed/'
+      path: '/'
+      fullPath: '/feed/'
+      preLoaderRoute: typeof FeedIndexRouteImport
+      parentRoute: typeof FeedRoute
+    }
+    '/feed/tiktok': {
+      id: '/feed/tiktok'
+      path: '/tiktok'
+      fullPath: '/feed/tiktok'
+      preLoaderRoute: typeof FeedTiktokRouteImport
+      parentRoute: typeof FeedRoute
+    }
+    '/feed/x': {
+      id: '/feed/x'
+      path: '/x'
+      fullPath: '/feed/x'
+      preLoaderRoute: typeof FeedXRouteImport
+      parentRoute: typeof FeedRoute
+    }
+    '/feed/youtube': {
+      id: '/feed/youtube'
+      path: '/youtube'
+      fullPath: '/feed/youtube'
+      preLoaderRoute: typeof FeedYoutubeRouteImport
+      parentRoute: typeof FeedRoute
+    }
   }
 }
 
+interface FeedRouteChildren {
+  FeedTiktokRoute: typeof FeedTiktokRoute
+  FeedXRoute: typeof FeedXRoute
+  FeedYoutubeRoute: typeof FeedYoutubeRoute
+  FeedIndexRoute: typeof FeedIndexRoute
+}
+
+const FeedRouteChildren: FeedRouteChildren = {
+  FeedTiktokRoute: FeedTiktokRoute,
+  FeedXRoute: FeedXRoute,
+  FeedYoutubeRoute: FeedYoutubeRoute,
+  FeedIndexRoute: FeedIndexRoute,
+}
+
+const FeedRouteWithChildren = FeedRoute._addFileChildren(FeedRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  FeedRoute: FeedRoute,
+  FeedRoute: FeedRouteWithChildren,
   ReferralsRoute: ReferralsRoute,
 }
 export const routeTree = rootRouteImport
