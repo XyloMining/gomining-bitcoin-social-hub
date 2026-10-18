@@ -1,40 +1,40 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { Header, Footer, SectionTitle } from "@/components/SiteChrome";
-import { PostCard, SocialGrid } from "@/components/Cards";
-import { XTimeline } from "@/components/XTimeline";
+import { SocialGrid } from "@/components/Cards";
 import { postsQuery } from "@/lib/posts-query";
 
 export const Route = createFileRoute("/feed")({
-  head: () => ({
-    meta: [
-      { title: "Latest Posts — Xylo Mining" },
-      { name: "description", content: "Every new Xylo Mining video and post about GoMining and Bitcoin, updated automatically." },
-      { property: "og:title", content: "Latest Posts — Xylo Mining" },
-      { property: "og:description", content: "New GoMining and Bitcoin videos and posts from Xylo Mining." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
   loader: ({ context }) => context.queryClient.ensureQueryData(postsQuery),
-  component: Feed,
+  component: FeedLayout,
 });
 
-function Feed() {
-  const { data: posts } = useSuspenseQuery(postsQuery);
+const tabs = [
+  { to: "/feed", label: "All" },
+  { to: "/feed/youtube", label: "YouTube" },
+  { to: "/feed/tiktok", label: "TikTok" },
+  { to: "/feed/x", label: "X" },
+] as const;
+
+function FeedLayout() {
   return (
     <div className="min-h-screen">
       <Header />
       <main className="mx-auto max-w-6xl px-5 pt-16">
         <SectionTitle eyebrow="Updated automatically" title="The feed" />
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {posts.map((p) => <PostCard key={p.id} p={p} />)}
-        </div>
-        {!posts.length && <p className="text-muted-foreground">New posts are on the way.</p>}
-        <section className="pt-20">
-          <SectionTitle eyebrow="Live from X" title="Latest on X" />
-          <XTimeline />
-        </section>
+        <nav className="mb-10 flex gap-6 overflow-x-auto border-b border-border">
+          {tabs.map((t) => (
+            <Link
+              key={t.to}
+              to={t.to}
+              activeOptions={{ exact: true }}
+              className="-mb-px border-b-2 border-transparent pb-3 text-xs uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground"
+              activeProps={{ className: "!border-gold !text-foreground" }}
+            >
+              {t.label}
+            </Link>
+          ))}
+        </nav>
+        <Outlet />
         <section className="pt-20">
           <SectionTitle eyebrow="More" title="Follow on every platform" />
           <SocialGrid />

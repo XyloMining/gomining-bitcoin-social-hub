@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { Eye, Heart, MessageCircle } from "lucide-react";
+
+const fmt = (n: number) => new Intl.NumberFormat("en", { notation: "compact" }).format(n);
 import type { FeedPost } from "@/lib/feed.functions";
 import { referrals, socials } from "@/lib/site";
 
@@ -47,6 +50,11 @@ export function PostCard({ p }: { p: FeedPost }) {
           {p.platform} · {p.date ? new Date(p.date).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }) : ""}
         </p>
         <h3 className="mt-2 line-clamp-3 text-xl leading-snug">{p.title}</h3>
+        <div className="mt-4 flex gap-5 border-t border-border pt-3 text-xs text-muted-foreground">
+          {p.views !== undefined && <span className="flex items-center gap-1.5"><Eye className="h-3.5 w-3.5" />{fmt(p.views)}</span>}
+          {p.likes !== undefined && <span className="flex items-center gap-1.5"><Heart className="h-3.5 w-3.5" />{fmt(p.likes)}</span>}
+          {p.comments !== undefined && <span className="flex items-center gap-1.5"><MessageCircle className="h-3.5 w-3.5" />{fmt(p.comments)}</span>}
+        </div>
       </div>
     </a>
   );
