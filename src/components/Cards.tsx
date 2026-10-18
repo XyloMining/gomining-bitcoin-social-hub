@@ -46,7 +46,7 @@ export function PostCard({ p }: { p: FeedPost }) {
         <p className="eyebrow">
           {p.platform} · {p.date ? new Date(p.date).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }) : ""}
         </p>
-        <h3 className="mt-2 text-xl leading-snug">{p.title}</h3>
+        <h3 className="mt-2 line-clamp-3 text-xl leading-snug">{p.title}</h3>
       </div>
     </a>
   );

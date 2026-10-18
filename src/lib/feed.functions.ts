@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 
 export type FeedPost = {
   id: string;
-  platform: "YouTube" | "Reddit";
+  platform: "YouTube" | "Reddit" | "TikTok";
   title: string;
   url: string;
   date: string;
@@ -58,8 +58,37 @@ async function reddit(): Promise<FeedPost[]> {
   }));
 }
 
+async function tiktok(): Promise<FeedPost[]> {
+  const lovable = process.env["LOVABLE_API_KEY"];
+  const key = process.env["TIKTOK_API_KEY"];
+  if (!lovable || !key) return [];
+  const res = await fetch(
+    "https://connector-gateway.lovable.dev/tiktok/video/list/?fields=id,title,create_time,cover_image_url,share_url",
+    {
+      method: "POST",
+      headers: { Authorization: `Bearer ${lovable}`, "X-Connection-Api-Key": key, "Content-Type": "application/json" },
+      body: JSON.stringify({ max_count: 10 }),
+    },
+  );
+  if (!res.ok) {
+    console.error(`TikTok request failed [${res.status}]: ${await res.text()}`);
+    return [];
+  }
+  const json = (await res.json()) as {
+    data?: { videos?: { id: string; title?: string; create_time: number; cover_image_url?: string; share_url: string }[] };
+  };
+  return (json.data?.videos ?? []).map((v) => ({
+    id: `tt-${v.id}`,
+    platform: "TikTok" as const,
+    title: v.title || "TikTok video",
+    url: v.share_url,
+    date: new Date(v.create_time * 1000).toISOString(),
+    thumbnail: v.cover_image_url,
+  }));
+}
+
 export const getLatestPosts = createServerFn({ method: "GET" }).handler(async () => {
-  const results = await Promise.allSettled([youtube(), reddit()]);
+  const results = await Promise.allSettled([youtube(), tiktok(), reddit()]);
   const posts = results.flatMap((r) => (r.status === "fulfilled" ? r.value : []));
   return posts.sort((a, b) => b.date.localeCompare(a.date));
 });

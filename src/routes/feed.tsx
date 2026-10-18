@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Header, Footer, SectionTitle } from "@/components/SiteChrome";
 import { PostCard, SocialGrid } from "@/components/Cards";
+import { XTimeline } from "@/components/XTimeline";
 import { postsQuery } from "@/lib/posts-query";
 
 export const Route = createFileRoute("/feed")({
@@ -30,6 +31,10 @@ function Feed() {
           {posts.map((p) => <PostCard key={p.id} p={p} />)}
         </div>
         {!posts.length && <p className="text-muted-foreground">New posts are on the way.</p>}
+        <section className="pt-20">
+          <SectionTitle eyebrow="Live from X" title="Latest on X" />
+          <XTimeline />
+        </section>
         <section className="pt-20">
           <SectionTitle eyebrow="More" title="Follow on every platform" />
           <SocialGrid />
