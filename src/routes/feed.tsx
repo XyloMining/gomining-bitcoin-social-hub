@@ -28,7 +28,7 @@ function FeedLayout() {
               to={t.to}
               activeOptions={{ exact: true }}
               className="-mb-px border-b-2 border-transparent pb-3 text-xs uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground"
-              activeProps={{ className: "border-gold text-foreground" }}
+              activeProps={{ className: "!border-gold !text-foreground" }}
             >
               {t.label}
             </Link>
