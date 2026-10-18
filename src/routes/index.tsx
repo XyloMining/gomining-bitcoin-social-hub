@@ -4,6 +4,7 @@ import hero from "@/assets/hero-coin.jpg";
 import { Header, Footer, SectionTitle } from "@/components/SiteChrome";
 import { PostCard, ReferralCard, SocialGrid } from "@/components/Cards";
 import { postsQuery } from "@/lib/posts-query";
+import { mergePosts } from "@/lib/merge-posts";
 import { referrals } from "@/lib/site";
 
 export const Route = createFileRoute("/")({
@@ -22,7 +23,8 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const { data: posts } = useSuspenseQuery(postsQuery);
+  const { data } = useSuspenseQuery(postsQuery);
+  const posts = mergePosts(data);
   const gm = referrals[0]!;
   return (
     <div className="min-h-screen">

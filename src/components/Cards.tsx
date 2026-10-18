@@ -3,6 +3,7 @@ import { Eye, Heart, MessageCircle } from "lucide-react";
 
 const fmt = (n: number) => new Intl.NumberFormat("en", { notation: "compact" }).format(n);
 import type { FeedPost } from "@/lib/feed.functions";
+import type { MergedPost } from "@/lib/merge-posts";
 import { referrals, socials } from "@/lib/site";
 
 export function ReferralCard({ r }: { r: (typeof referrals)[number] }) {
@@ -37,26 +38,35 @@ export function ReferralCard({ r }: { r: (typeof referrals)[number] }) {
   );
 }
 
-export function PostCard({ p }: { p: FeedPost }) {
+export function PostCard({ p }: { p: FeedPost & { sources?: MergedPost["sources"] } }) {
+  const sources = p.sources ?? [{ platform: p.platform, url: p.url }];
+  const date = p.date ? new Date(p.date).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }) : "";
   return (
-    <a href={p.url} target="_blank" rel="noreferrer" className="group block border border-border bg-card transition hover:border-gold">
-      {p.thumbnail && (
-        <div className="aspect-video overflow-hidden bg-muted">
-          <img src={p.thumbnail} alt={p.title} loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+    <div className="group flex flex-col border border-border bg-card transition hover:border-gold">
+      <a href={p.url} target="_blank" rel="noreferrer" className="block">
+        {p.thumbnail && (
+          <div className="aspect-video overflow-hidden bg-muted">
+            <img src={p.thumbnail} alt={p.title} loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+          </div>
+        )}
+        <div className="px-5 pt-5">
+          <p className="eyebrow">{sources.map((s) => s.platform).join(" + ")} · {date}</p>
+          <h3 className="mt-2 line-clamp-3 text-xl leading-snug">{p.title}</h3>
         </div>
-      )}
-      <div className="p-5">
-        <p className="eyebrow">
-          {p.platform} · {p.date ? new Date(p.date).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }) : ""}
-        </p>
-        <h3 className="mt-2 line-clamp-3 text-xl leading-snug">{p.title}</h3>
-        <div className="mt-4 flex gap-5 border-t border-border pt-3 text-xs text-muted-foreground">
-          {p.views !== undefined && <span className="flex items-center gap-1.5"><Eye className="h-3.5 w-3.5" />{fmt(p.views)}</span>}
-          {p.likes !== undefined && <span className="flex items-center gap-1.5"><Heart className="h-3.5 w-3.5" />{fmt(p.likes)}</span>}
-          {p.comments !== undefined && <span className="flex items-center gap-1.5"><MessageCircle className="h-3.5 w-3.5" />{fmt(p.comments)}</span>}
-        </div>
+      </a>
+      <div className="mx-5 mb-5 mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-border pt-3 text-xs text-muted-foreground">
+        {p.views !== undefined && <span className="flex items-center gap-1.5"><Eye className="h-3.5 w-3.5" />{fmt(p.views)}</span>}
+        {p.likes !== undefined && <span className="flex items-center gap-1.5"><Heart className="h-3.5 w-3.5" />{fmt(p.likes)}</span>}
+        {p.comments !== undefined && <span className="flex items-center gap-1.5"><MessageCircle className="h-3.5 w-3.5" />{fmt(p.comments)}</span>}
+        {sources.length > 1 && (
+          <span className="ml-auto flex gap-3">
+            {sources.map((s) => (
+              <a key={s.url} href={s.url} target="_blank" rel="noreferrer" className="text-gold-deep hover:underline">{s.platform}</a>
+            ))}
+          </span>
+        )}
       </div>
-    </a>
+    </div>
   );
 }
 
