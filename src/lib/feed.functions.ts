@@ -7,6 +7,9 @@ export type FeedPost = {
   url: string;
   date: string;
   thumbnail?: string | undefined;
+  views?: number | undefined;
+  likes?: number | undefined;
+  comments?: number | undefined;
 };
 
 const YT_CHANNEL = "UCXUPLb9x-nzQb-0H3A5WVow";
@@ -37,6 +40,8 @@ async function youtube(): Promise<FeedPost[]> {
       url: `https://www.youtube.com/watch?v=${id}`,
       date: e.match(/<published>(.*?)<\/published>/)?.[1] ?? "",
       thumbnail: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
+      views: Number(e.match(/<media:statistics views="(\d+)"/)?.[1] ?? 0),
+      likes: Number(e.match(/<media:starRating count="(\d+)"/)?.[1] ?? 0),
     };
   });
 }
@@ -47,10 +52,12 @@ async function reddit(): Promise<FeedPost[]> {
   });
   if (!res.ok) return [];
   const json = (await res.json()) as {
-    data?: { children?: { data: { id: string; title: string; permalink: string; created_utc: number } }[] };
+    data?: { children?: { data: { id: string; title: string; permalink: string; created_utc: number; score?: number; num_comments?: number } }[] };
   };
   return (json.data?.children ?? []).map(({ data: d }) => ({
     id: `rd-${d.id}`,
+    likes: d.score,
+    comments: d.num_comments,
     platform: "Reddit" as const,
     title: d.title,
     url: `https://www.reddit.com${d.permalink}`,
@@ -63,7 +70,7 @@ async function tiktok(): Promise<FeedPost[]> {
   const key = process.env["TIKTOK_API_KEY"];
   if (!lovable || !key) return [];
   const res = await fetch(
-    "https://connector-gateway.lovable.dev/tiktok/video/list/?fields=id,title,create_time,cover_image_url,share_url",
+    "https://connector-gateway.lovable.dev/tiktok/video/list/?fields=id,title,create_time,cover_image_url,share_url,view_count,like_count,comment_count",
     {
       method: "POST",
       headers: { Authorization: `Bearer ${lovable}`, "X-Connection-Api-Key": key, "Content-Type": "application/json" },
@@ -75,7 +82,7 @@ async function tiktok(): Promise<FeedPost[]> {
     return [];
   }
   const json = (await res.json()) as {
-    data?: { videos?: { id: string; title?: string; create_time: number; cover_image_url?: string; share_url: string }[] };
+    data?: { videos?: { id: string; title?: string; create_time: number; cover_image_url?: string; share_url: string; view_count?: number; like_count?: number; comment_count?: number }[] };
   };
   return (json.data?.videos ?? []).map((v) => ({
     id: `tt-${v.id}`,
@@ -84,11 +91,16 @@ async function tiktok(): Promise<FeedPost[]> {
     url: v.share_url,
     date: new Date(v.create_time * 1000).toISOString(),
     thumbnail: v.cover_image_url,
+    views: v.view_count,
+    likes: v.like_count,
+    comments: v.comment_count,
   }));
 }
 
 export const getLatestPosts = createServerFn({ method: "GET" }).handler(async () => {
   const results = await Promise.allSettled([youtube(), tiktok(), reddit()]);
-  const posts = results.flatMap((r) => (r.status === "fulfilled" ? r.value : []));
+  const posts = results.flatMap((r) =>
+    r.status === "fulfilled" ? [...r.value].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3) : [],
+  );
   return posts.sort((a, b) => b.date.localeCompare(a.date));
 });
