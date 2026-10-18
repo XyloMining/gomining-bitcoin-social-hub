@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Header, Footer, SectionTitle } from "@/components/SiteChrome";
 import { PostCard, SocialGrid } from "@/components/Cards";
-import { postsQuery } from "./index";
+import { postsQuery } from "@/lib/posts-query";
 
 export const Route = createFileRoute("/feed")({
   head: () => ({

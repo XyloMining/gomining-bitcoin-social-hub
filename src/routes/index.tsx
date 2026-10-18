@@ -1,16 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import hero from "@/assets/hero-coin.jpg";
 import { Header, Footer, SectionTitle } from "@/components/SiteChrome";
 import { PostCard, ReferralCard, SocialGrid } from "@/components/Cards";
-import { getLatestPosts } from "@/lib/feed.functions";
+import { postsQuery } from "@/lib/posts-query";
 import { referrals } from "@/lib/site";
-
-export const postsQuery = queryOptions({
-  queryKey: ["posts"],
-  queryFn: () => getLatestPosts(),
-  staleTime: 5 * 60_000,
-});
 
 export const Route = createFileRoute("/")({
   head: () => ({
