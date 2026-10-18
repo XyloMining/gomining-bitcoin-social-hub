@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { BRAND, socials } from "@/lib/site";
+import { ThemeToggle } from "./ThemeToggle";
 
 export function Header() {
   const link = "text-xs uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors";
@@ -9,9 +10,10 @@ export function Header() {
         <Link to="/" className="font-display text-2xl">
           Xylo <span className="text-gold-gradient italic">Mining</span>
         </Link>
-        <nav className="flex gap-5 sm:gap-8">
+        <nav className="flex items-center gap-5 sm:gap-8">
           <Link to="/feed" className={link} activeProps={{ className: "text-foreground" }}>Feed</Link>
           <Link to="/referrals" className={link} activeProps={{ className: "text-foreground" }}>Referrals</Link>
+          <ThemeToggle />
         </nav>
       </div>
     </header>
