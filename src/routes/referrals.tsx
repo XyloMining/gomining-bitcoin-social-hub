@@ -6,9 +6,9 @@ import { referrals } from "@/lib/site";
 export const Route = createFileRoute("/referrals")({
   head: () => ({
     meta: [
-      { title: "Referral Codes — Xylo Mining" },
+      { title: "Referral Codes | Xylo Mining" },
       { name: "description", content: "GoMining, Kryptex, Coinbase and Coinbase Wallet referral codes from Xylo Mining." },
-      { property: "og:title", content: "Referral Codes — Xylo Mining" },
+      { property: "og:title", content: "Referral Codes | Xylo Mining" },
       { property: "og:description", content: "Use Xylo Mining's codes for GoMining, Kryptex and Coinbase." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

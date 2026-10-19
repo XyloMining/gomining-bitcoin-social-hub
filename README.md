@@ -1,24 +1,25 @@
-# Gomining Bitcoin Social Hub
+# Xylo Mining site (source)
 
-Create me a $10k website, that hosts all of my social media posts, links to my accounts, referrals, etc. All focused around gomining and bitcoin
-
-This project was built with [Lovable](https://lovable.dev).
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/918113da-d6de-4881-92e0-ae08750e22be).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+Source for the Xylo Mining website, live at https://xylomining.github.io.
+It is a TanStack Start and React project with Tailwind. Pages: home, articles, feed (All, YouTube, TikTok, X) and referrals.
 
 ## Development
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+```sh
+bun install   # or npm install
+bun run dev
+```
+
+## Static build for GitHub Pages
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
+npx vite build --config vite.pages.config.ts
 ```
+
+The output is in `dist/client/`. Copy it into the `XyloMining/XyloMining.github.io` repo, keeping that repo's `posts.json`, `articles.json`, `scripts/` and `.github/`.
+
+The static build reads posts from `/posts.json` and articles from `/articles.json`. A scheduled job in the Pages repo refreshes both. `public/articles.json` here is only the starting copy.
+
+## Disclosure
+
+Referral links may earn Xylo Mining a reward at no cost to you. Nothing here is financial advice.

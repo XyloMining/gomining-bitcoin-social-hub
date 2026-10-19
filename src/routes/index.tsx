@@ -10,9 +10,9 @@ import { referrals } from "@/lib/site";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Xylo Mining — GoMining & Bitcoin" },
+      { title: "Xylo Mining | GoMining & Bitcoin" },
       { name: "description", content: "Xylo Mining: GoMining and Bitcoin mining content, latest videos, socials and referral codes." },
-      { property: "og:title", content: "Xylo Mining — GoMining & Bitcoin" },
+      { property: "og:title", content: "Xylo Mining | GoMining & Bitcoin" },
       { property: "og:description", content: "Latest GoMining and Bitcoin content, socials and referral codes from Xylo Mining." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -38,7 +38,7 @@ function Index() {
             Mining Bitcoin, <span className="text-gold-gradient italic">the quiet way.</span>
           </h1>
           <p className="mt-6 max-w-md text-muted-foreground">
-            Honest GoMining results, Bitcoin strategy and every link I use — in one place.
+            Honest GoMining results, Bitcoin strategy and every link I use, in one place.
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
             <a href={gm.url} target="_blank" rel="noreferrer" className="bg-primary px-7 py-4 text-xs uppercase tracking-[0.2em] text-primary-foreground hover:bg-gold-deep">

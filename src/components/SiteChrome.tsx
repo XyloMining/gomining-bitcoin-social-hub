@@ -12,6 +12,7 @@ export function Header() {
         </Link>
         <nav className="flex items-center gap-5 sm:gap-8">
           <Link to="/feed" className={link} activeProps={{ className: "text-foreground" }}>Feed</Link>
+          <Link to="/articles" className={link} activeProps={{ className: "text-foreground" }}>Articles</Link>
           <Link to="/referrals" className={link} activeProps={{ className: "text-foreground" }}>Referrals</Link>
           <ThemeToggle />
         </nav>
