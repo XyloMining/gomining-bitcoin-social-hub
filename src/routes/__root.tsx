@@ -87,9 +87,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,500&family=Karla:wght@400;500&display=swap" },
+      ...["cormorant-garamond-latin-500-normal", "cormorant-garamond-latin-500-italic", "karla-latin-400-normal"].map((f) => ({
+        rel: "preload", as: "font", type: "font/woff2", href: `/fonts/${f}.woff2`, crossOrigin: "anonymous" as const,
+      })),
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
       { rel: "icon", href: "/favicon.ico", sizes: "48x48 32x32 16x16" },
       { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
