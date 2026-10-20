@@ -40,7 +40,7 @@ export function ReferralCard({ r }: { r: (typeof referrals)[number] }) {
 
 export function PostCard({ p }: { p: FeedPost & { sources?: MergedPost["sources"] } }) {
   const sources = p.sources ?? [{ platform: p.platform, url: p.url }];
-  const date = p.date ? new Date(p.date).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }) : "";
+  const date = p.date ? new Date(p.date).toLocaleDateString("en-AU", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" }) : "";
   return (
     <div className="group flex flex-col border border-border bg-card transition hover:border-gold">
       <a href={p.url} target="_blank" rel="noreferrer" className="block">

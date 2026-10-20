@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import hero from "@/assets/hero-coin.jpg";
+import hero from "@/assets/hero-coin.webp";
 import { Header, Footer, SectionTitle } from "@/components/SiteChrome";
 import { PostCard, ReferralCard, SocialGrid } from "@/components/Cards";
 import { postsQuery } from "@/lib/posts-query";
@@ -30,7 +30,7 @@ function Index() {
     <div className="min-h-screen">
       <Header />
       <section className="relative overflow-hidden border-b border-border">
-        <img src={hero} alt="Gold Bitcoin on black marble" width={1600} height={1008} className="absolute inset-0 h-full w-full object-cover object-right opacity-90" />
+        <img src={hero} alt="Gold Bitcoin on black marble" width={1600} height={1008} fetchPriority="high" decoding="async" className="absolute inset-0 h-full w-full object-cover object-right opacity-90" />
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent" />
         <div className="relative mx-auto max-w-6xl px-5 py-28 sm:py-40">
           <p className="eyebrow mb-5">GoMining · Bitcoin · Hashrate</p>

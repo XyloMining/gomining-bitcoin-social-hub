@@ -19,7 +19,7 @@ export const Route = createFileRoute("/articles")({
 });
 
 const fmtDate = (d: string) =>
-  d ? new Date(d).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" }) : "";
+  d ? new Date(d).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }) : "";
 
 function Featured({ a }: { a: Article }) {
   return (

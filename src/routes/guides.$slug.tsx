@@ -65,7 +65,7 @@ function GuidePage() {
           <Link to="/guides" className="hover:text-foreground">Guides</Link> / <span>{g.title}</span>
         </nav>
         <article className="pt-6">
-          <p className="eyebrow">{g.readingMinutes} min read · Updated {new Date(g.updated).toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" })}</p>
+          <p className="eyebrow">{g.readingMinutes} min read · Updated {new Date(g.updated).toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" })}</p>
           <h1 className="mt-3 text-4xl leading-tight sm:text-5xl">{g.title}</h1>
           <p className="mt-4 text-lg text-muted-foreground">{g.description}</p>
 
