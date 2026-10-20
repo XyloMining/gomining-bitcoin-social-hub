@@ -18,5 +18,10 @@ export const postsQuery = queryOptions({
       return [];
     }
   },
+  // Start from an empty list, which is exactly what the pre-built page contains, so the first
+  // browser render matches it (no hydration mismatch). initialDataUpdatedAt: 0 marks it stale,
+  // so the real posts load straight after hydration.
+  initialData: [] as FeedPost[],
+  initialDataUpdatedAt: 0,
   staleTime: 5 * 60_000,
 });

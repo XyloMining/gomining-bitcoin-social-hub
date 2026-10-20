@@ -47,6 +47,10 @@ export const articlesQuery = queryOptions({
       return seedArticles;
     }
   },
+  // Same idea as the posts query: the first render uses the seed list that the pre-built page
+  // contains, then the latest list loads straight after hydration.
+  initialData: seedArticles,
+  initialDataUpdatedAt: 0,
   staleTime: 5 * 60_000,
 });
 
