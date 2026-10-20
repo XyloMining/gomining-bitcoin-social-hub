@@ -13,6 +13,7 @@ export const Route = createFileRoute("/articles")({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: "https://xylomining.github.io/articles/" }],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(articlesQuery),
   component: Articles,

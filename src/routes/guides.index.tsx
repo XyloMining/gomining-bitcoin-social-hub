@@ -15,15 +15,15 @@ export const Route = createFileRoute("/guides/")({
       { property: "og:description", content: DESC },
       { property: "og:type", content: "website" },
     ],
-    links: [{ rel: "canonical", href: "https://xylomining.github.io/guides" }],
+    links: [{ rel: "canonical", href: "https://xylomining.github.io/guides/" }],
     scripts: [{
       type: "application/ld+json",
       children: JSON.stringify({
         "@context": "https://schema.org",
         "@type": "CollectionPage",
         name: "Bitcoin mining guides",
-        url: "https://xylomining.github.io/guides",
-        hasPart: guides.map((g) => ({ "@type": "Article", headline: g.title, url: `https://xylomining.github.io/guides/${g.slug}` })),
+        url: "https://xylomining.github.io/guides/",
+        hasPart: guides.map((g) => ({ "@type": "Article", headline: g.title, url: `https://xylomining.github.io/guides/${g.slug}/` })),
       }),
     }],
   }),

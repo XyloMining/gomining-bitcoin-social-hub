@@ -13,6 +13,7 @@ export const Route = createFileRoute("/referrals")({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: "https://xylomining.github.io/referrals/" }],
   }),
   component: Referrals,
 });

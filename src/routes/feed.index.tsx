@@ -11,6 +11,7 @@ export const Route = createFileRoute("/feed/")({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: "https://xylomining.github.io/feed/" }],
   }),
   component: () => <PlatformFeed />,
 });

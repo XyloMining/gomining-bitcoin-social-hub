@@ -21,7 +21,7 @@ export const Route = createFileRoute("/calculator")({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
-    links: [{ rel: "canonical", href: "https://xylomining.github.io/calculator" }],
+    links: [{ rel: "canonical", href: "https://xylomining.github.io/calculator/" }],
   }),
   component: Calculator,
 });

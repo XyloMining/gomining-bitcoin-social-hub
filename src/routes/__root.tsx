@@ -87,8 +87,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
+      // Preload only what this screen size uses (matches the media query in styles.css).
       ...["cormorant-garamond-latin-500-normal", "cormorant-garamond-latin-500-italic", "karla-latin-400-normal"].map((f) => ({
-        rel: "preload", as: "font", type: "font/woff2", href: `/fonts/${f}.woff2`, crossOrigin: "anonymous" as const,
+        rel: "preload", as: "font", type: "font/woff2", href: `/fonts/${f}.woff2`, crossOrigin: "anonymous" as const, media: "(min-width: 768px)",
+      })),
+      ...["inter-latin-400-normal", "inter-latin-500-normal"].map((f) => ({
+        rel: "preload", as: "font", type: "font/woff2", href: `/fonts/${f}.woff2`, crossOrigin: "anonymous" as const, media: "(max-width: 767px)",
       })),
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
       { rel: "icon", href: "/favicon.ico", sizes: "48x48 32x32 16x16" },

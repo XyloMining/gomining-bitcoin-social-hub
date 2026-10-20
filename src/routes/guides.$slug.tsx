@@ -12,7 +12,7 @@ export const Route = createFileRoute("/guides/$slug")({
   },
   head: ({ loaderData: g }) => {
     if (!g) return {};
-    const url = `${ORIGIN}/guides/${g.slug}`;
+    const url = `${ORIGIN}/guides/${g.slug}/`;
     return {
       meta: [
         { title: `${g.title} | Xylo Mining` },
@@ -39,7 +39,7 @@ export const Route = createFileRoute("/guides/$slug")({
           "@context": "https://schema.org", "@type": "BreadcrumbList",
           itemListElement: [
             { "@type": "ListItem", position: 1, name: "Home", item: ORIGIN },
-            { "@type": "ListItem", position: 2, name: "Guides", item: `${ORIGIN}/guides` },
+            { "@type": "ListItem", position: 2, name: "Guides", item: `${ORIGIN}/guides/` },
             { "@type": "ListItem", position: 3, name: g.title, item: url },
           ],
         }) },
