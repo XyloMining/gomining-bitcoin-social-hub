@@ -11,12 +11,15 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ArticlesRouteImport } from './routes/articles'
+import { Route as CalculatorRouteImport } from './routes/calculator'
 import { Route as FeedRouteImport } from './routes/feed'
 import { Route as ReferralsRouteImport } from './routes/referrals'
 import { Route as FeedIndexRouteImport } from './routes/feed.index'
 import { Route as FeedTiktokRouteImport } from './routes/feed.tiktok'
 import { Route as FeedXRouteImport } from './routes/feed.x'
 import { Route as FeedYoutubeRouteImport } from './routes/feed.youtube'
+import { Route as GuidesIndexRouteImport } from './routes/guides.index'
+import { Route as GuidesSlugRouteImport } from './routes/guides.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -26,6 +29,11 @@ const IndexRoute = IndexRouteImport.update({
 const ArticlesRoute = ArticlesRouteImport.update({
   id: '/articles',
   path: '/articles',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalculatorRoute = CalculatorRouteImport.update({
+  id: '/calculator',
+  path: '/calculator',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FeedRoute = FeedRouteImport.update({
@@ -58,74 +66,105 @@ const FeedYoutubeRoute = FeedYoutubeRouteImport.update({
   path: '/youtube',
   getParentRoute: () => FeedRoute,
 } as any)
+const GuidesIndexRoute = GuidesIndexRouteImport.update({
+  id: '/guides/',
+  path: '/guides/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuidesSlugRoute = GuidesSlugRouteImport.update({
+  id: '/guides/$slug',
+  path: '/guides/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/articles': typeof ArticlesRoute
+  '/calculator': typeof CalculatorRoute
   '/feed': typeof FeedRouteWithChildren
   '/referrals': typeof ReferralsRoute
   '/feed/tiktok': typeof FeedTiktokRoute
   '/feed/x': typeof FeedXRoute
   '/feed/youtube': typeof FeedYoutubeRoute
+  '/guides/$slug': typeof GuidesSlugRoute
   '/feed/': typeof FeedIndexRoute
+  '/guides/': typeof GuidesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/articles': typeof ArticlesRoute
+  '/calculator': typeof CalculatorRoute
   '/referrals': typeof ReferralsRoute
   '/feed/tiktok': typeof FeedTiktokRoute
   '/feed/x': typeof FeedXRoute
   '/feed/youtube': typeof FeedYoutubeRoute
+  '/guides/$slug': typeof GuidesSlugRoute
   '/feed': typeof FeedIndexRoute
+  '/guides': typeof GuidesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/articles': typeof ArticlesRoute
+  '/calculator': typeof CalculatorRoute
   '/feed': typeof FeedRouteWithChildren
   '/referrals': typeof ReferralsRoute
   '/feed/tiktok': typeof FeedTiktokRoute
   '/feed/x': typeof FeedXRoute
   '/feed/youtube': typeof FeedYoutubeRoute
+  '/guides/$slug': typeof GuidesSlugRoute
   '/feed/': typeof FeedIndexRoute
+  '/guides/': typeof GuidesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/articles'
+    | '/calculator'
     | '/feed'
     | '/referrals'
     | '/feed/tiktok'
     | '/feed/x'
     | '/feed/youtube'
+    | '/guides/$slug'
     | '/feed/'
+    | '/guides/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/articles'
+    | '/calculator'
     | '/referrals'
     | '/feed/tiktok'
     | '/feed/x'
     | '/feed/youtube'
+    | '/guides/$slug'
     | '/feed'
+    | '/guides'
   id:
     | '__root__'
     | '/'
     | '/articles'
+    | '/calculator'
     | '/feed'
     | '/referrals'
     | '/feed/tiktok'
     | '/feed/x'
     | '/feed/youtube'
+    | '/guides/$slug'
     | '/feed/'
+    | '/guides/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ArticlesRoute: typeof ArticlesRoute
+  CalculatorRoute: typeof CalculatorRoute
   FeedRoute: typeof FeedRouteWithChildren
   ReferralsRoute: typeof ReferralsRoute
+  GuidesSlugRoute: typeof GuidesSlugRoute
+  GuidesIndexRoute: typeof GuidesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -142,6 +181,13 @@ declare module '@tanstack/react-router' {
       path: '/articles'
       fullPath: '/articles'
       preLoaderRoute: typeof ArticlesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calculator': {
+      id: '/calculator'
+      path: '/calculator'
+      fullPath: '/calculator'
+      preLoaderRoute: typeof CalculatorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/feed': {
@@ -186,6 +232,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FeedYoutubeRouteImport
       parentRoute: typeof FeedRoute
     }
+    '/guides/': {
+      id: '/guides/'
+      path: '/guides'
+      fullPath: '/guides/'
+      preLoaderRoute: typeof GuidesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guides/$slug': {
+      id: '/guides/$slug'
+      path: '/guides/$slug'
+      fullPath: '/guides/$slug'
+      preLoaderRoute: typeof GuidesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -208,8 +268,11 @@ const FeedRouteWithChildren = FeedRoute._addFileChildren(FeedRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ArticlesRoute: ArticlesRoute,
+  CalculatorRoute: CalculatorRoute,
   FeedRoute: FeedRouteWithChildren,
   ReferralsRoute: ReferralsRoute,
+  GuidesSlugRoute: GuidesSlugRoute,
+  GuidesIndexRoute: GuidesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

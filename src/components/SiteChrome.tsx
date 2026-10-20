@@ -10,9 +10,11 @@ export function Header() {
         <Link to="/" className="font-display text-2xl">
           Xylo <span className="text-gold-gradient italic">Mining</span>
         </Link>
-        <nav className="flex items-center gap-5 sm:gap-8">
+        <nav className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2 sm:gap-x-8">
           <Link to="/feed" className={link} activeProps={{ className: "text-foreground" }}>Feed</Link>
           <Link to="/articles" className={link} activeProps={{ className: "text-foreground" }}>Articles</Link>
+          <Link to="/guides" className={link} activeProps={{ className: "text-foreground" }}>Guides</Link>
+          <Link to="/calculator" className={link} activeProps={{ className: "text-foreground" }}>Calculator</Link>
           <Link to="/referrals" className={link} activeProps={{ className: "text-foreground" }}>Referrals</Link>
           <ThemeToggle />
         </nav>
