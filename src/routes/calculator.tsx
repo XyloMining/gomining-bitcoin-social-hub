@@ -1,10 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { Header, Footer, SectionTitle } from "@/components/SiteChrome";
+import { Field } from "@/components/Field";
+import { CostInput, costUsdOf, initialCost, type CostState } from "@/components/CostInput";
+import { ProjectionPanel } from "@/components/ProjectionPanel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DISCOUNT_PARTS, GOMINING_RATES } from "@/data/gomining-rates";
 import {
-  DAYS_PER_MONTH, DAYS_PER_YEAR, btc, estimate, num, sensitivity, usd, type Network,
+  DAYS_PER_MONTH, DAYS_PER_YEAR, btc, estimate, num, sensitivity, usd, type FiatCode, type Network,
 } from "@/lib/mining-math";
 
 const TITLE = "Bitcoin Mining Profitability Calculator | Xylo Mining";
@@ -30,10 +33,10 @@ export const Route = createFileRoute("/calculator")({
 const EXAMPLE_NET: Network = { networkEhs: 1000, subsidyBtc: 3.125, feesPerBlockBtc: 0.1 };
 const EXAMPLE_PRICE = 70000;
 
-type Live = { net: Network; price: number; live: boolean };
+type Live = { net: Network; price: number; live: boolean; fiat: Partial<Record<FiatCode, number>> };
 
 function useLiveData(): Live {
-  const [d, setD] = useState<Live>({ net: EXAMPLE_NET, price: EXAMPLE_PRICE, live: false });
+  const [d, setD] = useState<Live>({ net: EXAMPLE_NET, price: EXAMPLE_PRICE, live: false, fiat: { USD: EXAMPLE_PRICE } });
   useEffect(() => {
     let off = false;
     (async () => {
@@ -47,7 +50,12 @@ function useLiveData(): Live {
         const price = Number(p?.USD);
         const fees = Number(r?.totalFee) / 1e8 / Math.max(1, Number(r?.endBlock) - Number(r?.startBlock) + 1);
         if (!off && ehs > 0 && price > 0 && Number.isFinite(fees)) {
-          setD({ net: { networkEhs: ehs, subsidyBtc: 3.125, feesPerBlockBtc: fees }, price, live: true });
+          const fiat: Partial<Record<FiatCode, number>> = {};
+          for (const c of ["USD", "AUD", "EUR", "GBP", "CAD", "CHF", "JPY"] as const) {
+            const v = Number(p?.[c]);
+            if (v > 0) fiat[c] = v;
+          }
+          setD({ net: { networkEhs: ehs, subsidyBtc: 3.125, feesPerBlockBtc: fees }, price, live: true, fiat });
         }
       } catch {
         /* keep the labelled example values */
@@ -56,19 +64,6 @@ function useLiveData(): Live {
     return () => { off = true; };
   }, []);
   return d;
-}
-
-function Field({ id, label, hint, value, onChange }: { id: string; label: string; hint?: string | undefined; value: string; onChange: (v: string) => void }) {
-  return (
-    <div>
-      <label htmlFor={id} className="eyebrow block">{label}</label>
-      <input
-        id={id} inputMode="decimal" value={value} onChange={(e) => onChange(e.target.value)}
-        className="mt-2 w-full border border-border bg-background px-4 py-3 text-lg outline-none focus:border-gold"
-      />
-      {hint && <p className="mt-1 text-xs text-muted-foreground">{hint}</p>}
-    </div>
-  );
 }
 
 function Row({ k, v, strong }: { k: string; v: string; strong?: boolean }) {
@@ -161,6 +156,9 @@ function BitcoinTab({ live }: { live: Live }) {
   const [disc, setDisc] = useState("0");
   const [priceIn, setPriceIn] = useState<string | null>(null);
   const price = priceIn === null ? live.price : num(priceIn);
+  const [cost, setCost] = useState<CostState>(initialCost);
+  const costCtx = { btcUsd: price, fiatPerBtc: live.fiat };
+  const costUsd = costUsdOf(cost, costCtx) ?? 0;
   const costs = { electricityPerKwh: num(maint), servicePerThDay: 0, discountPct: num(disc) };
   return (
     <div className="grid gap-10 pt-8 lg:grid-cols-[360px_minmax(0,1fr)] grid-cols-[minmax(0,1fr)]">
@@ -170,8 +168,14 @@ function BitcoinTab({ live }: { live: Live }) {
         <Field id="b-m" label="Maintenance cost ($ per kWh)" hint="Your electricity price, or a platform's per kWh equivalent." value={maint} onChange={setMaint} />
         <Field id="b-d" label="Discount (%)" hint="Applied to the maintenance cost." value={disc} onChange={setDisc} />
         <Field id="b-p" label="BTC price ($)" hint={priceIn === null ? (live.live ? "Live price. Type to override." : "Example price. Type to override.") : undefined} value={priceIn ?? String(Math.round(live.price))} onChange={setPriceIn} />
+        <CostInput idPrefix="bc" state={cost} onChange={setCost} ctx={costCtx} />
       </div>
-      <Results th={num(th)} w={num(w)} price={price} net={live.net} costs={costs} />
+      <div className="min-w-0">
+        <Results th={num(th)} w={num(w)} price={price} net={live.net} costs={costs} />
+      </div>
+      <div className="min-w-0 lg:col-span-2">
+        <ProjectionPanel th={num(th)} w={num(w)} price={price} net={live.net} costs={costs} costUsd={costUsd} />
+      </div>
     </div>
   );
 }
@@ -182,6 +186,9 @@ function GoMiningTab({ live }: { live: Live }) {
   const [disc, setDisc] = useState("0");
   const [priceIn, setPriceIn] = useState<string | null>(null);
   const price = priceIn === null ? live.price : num(priceIn);
+  const [cost, setCost] = useState<CostState>(initialCost);
+  const costCtx = { btcUsd: price, fiatPerBtc: live.fiat };
+  const costUsd = costUsdOf(cost, costCtx) ?? 0;
   const costs = { electricityPerKwh: GOMINING_RATES.electricityPerKwh, servicePerThDay: GOMINING_RATES.servicePerThDay, discountPct: num(disc) };
   return (
     <div className="grid gap-10 pt-8 lg:grid-cols-[360px_minmax(0,1fr)] grid-cols-[minmax(0,1fr)]">
@@ -190,11 +197,17 @@ function GoMiningTab({ live }: { live: Live }) {
         <Field id="g-w" label="Efficiency (W/TH)" value={w} onChange={setW} />
         <Field id="g-d" label="Discount (%)" hint={"Total of all your discounts. Parts seen: " + DISCOUNT_PARTS.map((d) => d.label + " (" + d.range + ")").join(", ") + ". Check your account for your own."} value={disc} onChange={setDisc} />
         <Field id="g-p" label="BTC price ($)" value={priceIn ?? String(Math.round(live.price))} onChange={setPriceIn} />
+        <CostInput idPrefix="gc" state={cost} onChange={setCost} ctx={costCtx} />
         <p className="text-xs text-muted-foreground">
           Maintenance is calculated automatically: electricity at ${GOMINING_RATES.electricityPerKwh} per kWh plus a service fee of ${GOMINING_RATES.servicePerThDay} per TH per day, then your discount. GoMining can change these rates, and its own calculator is also only a rough estimate.
         </p>
       </div>
-      <Results th={num(th)} w={num(w)} price={price} net={live.net} costs={costs} />
+      <div className="min-w-0">
+        <Results th={num(th)} w={num(w)} price={price} net={live.net} costs={costs} />
+      </div>
+      <div className="min-w-0 lg:col-span-2">
+        <ProjectionPanel th={num(th)} w={num(w)} price={price} net={live.net} costs={costs} costUsd={costUsd} />
+      </div>
     </div>
   );
 }

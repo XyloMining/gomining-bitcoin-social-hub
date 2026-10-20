@@ -122,3 +122,94 @@ export const usd = (n: number, digits = 2) =>
   (n < 0 && Math.abs(n) >= 0.5 * 10 ** -digits ? "-" : "") + "$" + Math.abs(n).toLocaleString("en-US", { minimumFractionDigits: digits, maximumFractionDigits: digits });
 
 export const btc = (n: number) => (n === 0 ? "0" : n.toFixed(n < 0.001 ? 8 : 6)) + " BTC";
+
+export type GrowthInput = {
+  th: number;
+  wPerTh: number;
+  btcPrice: number;
+  net: Network;
+  costs: Costs;
+  months: number;
+  /** Monthly change in the BTC price, in percent. */
+  priceGrowthPct: number;
+  /** Monthly growth of total network hashrate (a stand-in for rising difficulty), in percent. */
+  networkGrowthPct: number;
+  /** Share of positive monthly net used to buy more TH, 0 to 100. */
+  reinvestPct: number;
+  /** Cost of one extra TH in dollars. Zero or less disables reinvesting. */
+  costPerTh: number;
+};
+
+export type GrowthPoint = {
+  month: number;
+  th: number;
+  /** Cumulative BTC mined, before maintenance. */
+  btcCum: number;
+  /** Cumulative net result in dollars (revenue minus maintenance). */
+  netCum: number;
+  /** Net result that was not reinvested, in dollars. */
+  cashCum: number;
+  /** TH added by reinvesting. */
+  thAdded: number;
+};
+
+/**
+ * Month-by-month projection. Each month uses 30 days at that month's TH, price and network size,
+ * then the price and network move by their monthly rates. Hardware resale value is not counted.
+ */
+export function projectGrowth(g: GrowthInput): GrowthPoint[] {
+  const months = Math.max(1, Math.min(120, Math.round(safe(g.months) || 1)));
+  const price = (x: number) => 1 + clamp(x, -90, 1000) / 100;
+  let th = safe(g.th);
+  let btcPrice = safe(g.btcPrice);
+  let ehs = safe(g.net.networkEhs);
+  let btcCum = 0, netCum = 0, cashCum = 0, thAdded = 0;
+  const out: GrowthPoint[] = [{ month: 0, th, btcCum, netCum, cashCum, thAdded }];
+  for (let m = 1; m <= months; m++) {
+    const e = estimate(th, g.wPerTh, btcPrice, { ...g.net, networkEhs: ehs }, g.costs);
+    const monthNet = e.netPerDay * DAYS_PER_MONTH;
+    btcCum += e.btcPerDay * DAYS_PER_MONTH;
+    netCum += monthNet;
+    const spend = monthNet > 0 && g.costPerTh > 0 ? monthNet * (clamp(g.reinvestPct, 0, 100) / 100) : 0;
+    const bought = spend > 0 ? spend / g.costPerTh : 0;
+    th += bought;
+    thAdded += bought;
+    cashCum += monthNet - spend;
+    btcPrice *= price(g.priceGrowthPct);
+    ehs *= price(g.networkGrowthPct);
+    out.push({ month: m, th, btcCum, netCum, cashCum, thAdded });
+  }
+  return out;
+}
+
+export type FiatCode = "USD" | "AUD" | "EUR" | "GBP" | "CAD" | "CHF" | "JPY";
+export type CostUnit = FiatCode | "BTC" | "GMT";
+export const FIAT_CODES: FiatCode[] = ["USD", "AUD", "EUR", "GBP", "CAD", "CHF", "JPY"];
+
+export type CostContext = {
+  /** BTC price in dollars, as used in the calculator. */
+  btcUsd: number;
+  /** Price of 1 BTC in each currency (live). Only USD may be present if live data failed. */
+  fiatPerBtc: Partial<Record<FiatCode, number>>;
+  /** Price of 1 GMT (GOMINING token) in dollars. */
+  gmtUsd: number;
+};
+
+/** Convert a purchase cost in any supported unit to dollars. Returns null if the rate is not known. */
+export function costToUsd(amount: number, unit: CostUnit, c: CostContext): number | null {
+  const a = safe(amount);
+  if (unit === "USD") return a;
+  if (unit === "BTC") return a * safe(c.btcUsd);
+  if (unit === "GMT") return safe(c.gmtUsd) > 0 ? a * c.gmtUsd : null;
+  const usdPerBtc = c.fiatPerBtc.USD;
+  const fiat = c.fiatPerBtc[unit];
+  if (!usdPerBtc || !fiat) return null;
+  return a * (usdPerBtc / fiat);
+}
+
+/** First month (1-based) where cumulative net reaches the cost, or null if it never does in the window. */
+export function paybackMonth(netCum: number[], costUsd: number): number | null {
+  if (!(costUsd > 0)) return null;
+  const i = netCum.findIndex((v, n) => n > 0 && v >= costUsd);
+  return i === -1 ? null : i;
+}

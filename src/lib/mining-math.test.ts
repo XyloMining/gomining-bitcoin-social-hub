@@ -60,3 +60,56 @@ describe("usd", () => {
     expect(usd(-1.5)).toBe("-$1.50");
   });
 });
+
+import { projectGrowth, DAYS_PER_MONTH } from "./mining-math";
+describe("projectGrowth", () => {
+  const costs = { electricityPerKwh: 0.02, servicePerThDay: 0, discountPct: 0 };
+  const base = { th: 100, wPerTh: 15, btcPrice: 70000, net, costs, months: 12, priceGrowthPct: 0, networkGrowthPct: 0, reinvestPct: 0, costPerTh: 15 };
+  it("with no growth and no reinvesting, cumulative net is a straight line", () => {
+    const pts = projectGrowth(base);
+    const perMonth = estimate(100, 15, 70000, net, costs).netPerDay * DAYS_PER_MONTH;
+    expect(pts).toHaveLength(13);
+    expect(pts[12]!.netCum).toBeCloseTo(perMonth * 12, 6);
+    expect(pts[12]!.th).toBe(100);
+  });
+  it("network growth lowers the result and price growth raises it", () => {
+    const flat = projectGrowth(base)[12]!.netCum;
+    expect(projectGrowth({ ...base, networkGrowthPct: 5 })[12]!.netCum).toBeLessThan(flat);
+    expect(projectGrowth({ ...base, priceGrowthPct: 3 })[12]!.netCum).toBeGreaterThan(flat);
+  });
+  it("reinvesting adds TH and grows the total when net is positive", () => {
+    const re = projectGrowth({ ...base, reinvestPct: 100 })[12]!;
+    expect(re.th).toBeGreaterThan(100);
+    expect(re.netCum).toBeGreaterThan(projectGrowth(base)[12]!.netCum);
+    expect(re.cashCum).toBeCloseTo(0, 6);
+  });
+  it("never reinvests a loss", () => {
+    const loss = projectGrowth({ ...base, costs: { ...costs, electricityPerKwh: 5 }, reinvestPct: 100 })[12]!;
+    expect(loss.th).toBe(100);
+    expect(loss.netCum).toBeLessThan(0);
+  });
+  it("copes with bad input", () => {
+    const pts = projectGrowth({ ...base, th: 0, months: 0, costPerTh: 0, reinvestPct: 500 });
+    expect(pts.every((p) => Number.isFinite(p.netCum))).toBe(true);
+  });
+});
+
+import { costToUsd, paybackMonth } from "./mining-math";
+describe("purchase cost conversion", () => {
+  const ctx = { btcUsd: 80000, fiatPerBtc: { USD: 80000, AUD: 120000 }, gmtUsd: 0.4 };
+  it("converts each unit to dollars", () => {
+    expect(costToUsd(100, "USD", ctx)).toBe(100);
+    expect(costToUsd(0.01, "BTC", ctx)).toBeCloseTo(800, 9);
+    expect(costToUsd(1000, "GMT", ctx)).toBeCloseTo(400, 9);
+    expect(costToUsd(300, "AUD", ctx)).toBeCloseTo(200, 9); // 80000 / 120000 = 0.6667 USD per AUD
+  });
+  it("returns null when a rate is missing", () => {
+    expect(costToUsd(100, "EUR", ctx)).toBeNull();
+    expect(costToUsd(100, "GMT", { ...ctx, gmtUsd: 0 })).toBeNull();
+  });
+  it("finds the payback month", () => {
+    expect(paybackMonth([0, 10, 20, 30], 25)).toBe(3);
+    expect(paybackMonth([0, 10, 20, 30], 100)).toBeNull();
+    expect(paybackMonth([0, 10], 0)).toBeNull();
+  });
+});
