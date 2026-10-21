@@ -16,6 +16,12 @@ type Props = {
   /** One label per point, for example "Month 3". */
   labels: string[];
   format: (n: number) => string;
+  /** Text under the x axis. */
+  xTitle?: string;
+  /** Label for the slider. */
+  pickLabel?: string;
+  /** Text for an axis tick at point n. Defaults to the number itself. */
+  tick?: (n: number) => string;
 };
 
 const W = 640;
@@ -34,7 +40,7 @@ function niceTicks(min: number, max: number, count = 4): number[] {
 }
 
 /** A small dependency-free line chart. A slider picks the month so it works with touch and keyboard. */
-export function GrowthChart({ title, summary, series, labels, format }: Props) {
+export function GrowthChart({ title, summary, series, labels, format, xTitle = "Months from today", pickLabel = "Look at month", tick = (n) => String(n) }: Props) {
   const id = useId();
   const last = Math.max(0, labels.length - 1);
   const [idx, setIdx] = useState(last);
@@ -63,7 +69,7 @@ export function GrowthChart({ title, summary, series, labels, format }: Props) {
         ))}
         {labels.map((l, n) =>
           n === 0 || n === last || n % Math.max(1, Math.round(last / 6)) === 0 ? (
-            <text key={l} x={x(n)} y={H - 8} textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">{n}</text>
+            <text key={l} x={x(n)} y={H - 8} textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">{tick(n)}</text>
           ) : null,
         )}
         {series.map((s) => (
@@ -75,9 +81,9 @@ export function GrowthChart({ title, summary, series, labels, format }: Props) {
           return v === undefined ? null : <circle key={s.label} cx={x(i)} cy={y(v)} r={4.5} fill={s.color} stroke="var(--card)" strokeWidth={2} />;
         })}
       </svg>
-      <p className="mt-1 text-center text-xs text-muted-foreground">Months from today</p>
+      <p className="mt-1 text-center text-xs text-muted-foreground">{xTitle}</p>
 
-      <label htmlFor={`${id}-s`} className="eyebrow mt-3 block">Look at month</label>
+      <label htmlFor={`${id}-s`} className="eyebrow mt-3 block">{pickLabel}</label>
       <input id={`${id}-s`} type="range" min={0} max={last} value={i} onChange={(e) => setIdx(Number(e.target.value))} className="mt-2 w-full accent-[var(--gold-deep)]" aria-valuetext={labels[i]} />
 
       <ul className="mt-3 grid gap-2 sm:grid-cols-2" aria-live="polite">

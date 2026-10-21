@@ -9,6 +9,7 @@ const NAV = [
   { to: "/articles", label: "Articles" },
   { to: "/guides", label: "Guides" },
   { to: "/calculator", label: "Calculator" },
+  { to: "/results", label: "My results" },
   { to: "/referrals", label: "Referrals" },
 ] as const;
 
@@ -27,13 +28,13 @@ export function Header() {
         <Link to="/" className="font-display text-2xl" onClick={() => setOpen(false)}>
           Xylo <span className="text-gold-gradient italic">Mining</span>
         </Link>
-        <nav aria-label="Main" className="hidden items-center gap-8 md:flex">
+        <nav aria-label="Main" className="hidden items-center gap-8 lg:flex">
           {NAV.map((n) => (
             <Link key={n.to} to={n.to} className={link} activeProps={{ className: "text-foreground" }}>{n.label}</Link>
           ))}
           <ThemeToggle />
         </nav>
-        <div className="flex items-center gap-3 md:hidden">
+        <div className="flex items-center gap-3 lg:hidden">
           <ThemeToggle />
           <button
             type="button"
@@ -48,7 +49,7 @@ export function Header() {
         </div>
       </div>
       {open && (
-        <nav id="mobile-menu" aria-label="Mobile menu" className="border-t border-border md:hidden">
+        <nav id="mobile-menu" aria-label="Mobile menu" className="border-t border-border lg:hidden">
           <ul className="mx-auto max-w-6xl px-5 py-2">
             {NAV.map((n) => (
               <li key={n.to} className="border-b border-border last:border-b-0">
