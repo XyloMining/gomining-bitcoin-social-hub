@@ -1,19 +1,24 @@
 import { FIAT_CODES, costToUsd, num, usd, type CostContext, type CostUnit } from "@/lib/mining-math";
 
 export type CostState = { amount: string; unit: CostUnit; gmtPrice: string };
-export const initialCost: CostState = { amount: "", unit: "USD", gmtPrice: "0.37" };
+/** Used only if no live GMT price could be loaded. From the account export of 19 Oct 2026. */
+export const EXAMPLE_GMT = 0.37;
+export const initialCost: CostState = { amount: "", unit: "USD", gmtPrice: "" };
+
+type Ctx = Omit<CostContext, "gmtUsd"> & { gmtLive: number | null };
 
 /** Purchase cost of the miner, in dollars (or null if it cannot be converted yet). */
-export function costUsdOf(s: CostState, ctx: Omit<CostContext, "gmtUsd">): number | null {
+export function costUsdOf(s: CostState, ctx: Ctx): number | null {
   if (s.amount.trim() === "") return 0;
-  return costToUsd(num(s.amount), s.unit, { ...ctx, gmtUsd: num(s.gmtPrice) });
+  const gmtUsd = s.gmtPrice.trim() !== "" ? num(s.gmtPrice) : (ctx.gmtLive ?? EXAMPLE_GMT);
+  return costToUsd(num(s.amount), s.unit, { btcUsd: ctx.btcUsd, fiatPerBtc: ctx.fiatPerBtc, gmtUsd });
 }
 
 type Props = {
   idPrefix: string;
   state: CostState;
   onChange: (s: CostState) => void;
-  ctx: Omit<CostContext, "gmtUsd">;
+  ctx: Ctx;
 };
 
 /** Miner purchase cost with a unit picker: a currency, BTC or GMT. */
@@ -42,11 +47,11 @@ export function CostInput({ idPrefix, state, onChange, ctx }: Props) {
         <div className="mt-3">
           <label htmlFor={`${idPrefix}-gmt`} className="eyebrow block">GMT price ($)</label>
           <input
-            id={`${idPrefix}-gmt`} inputMode="decimal" value={state.gmtPrice}
+            id={`${idPrefix}-gmt`} inputMode="decimal" value={state.gmtPrice} placeholder={String(Number((ctx.gmtLive ?? EXAMPLE_GMT).toPrecision(4)))}
             onChange={(e) => onChange({ ...state, gmtPrice: e.target.value })}
             className="mt-2 w-full border border-border bg-background px-4 py-3 text-lg outline-none focus:border-gold"
           />
-          <p className="mt-1 text-xs text-muted-foreground">Example value from my account export on 19 Oct 2026. Enter the current GMT price.</p>
+          <p className="mt-1 text-xs text-muted-foreground">{ctx.gmtLive ? "Live GOMINING token price from CoinGecko. Type a number to use your own." : "Live price not available, so an example is used. Enter the current GMT price."}</p>
         </div>
       )}
       <p className="mt-1 text-xs text-muted-foreground" aria-live="polite">

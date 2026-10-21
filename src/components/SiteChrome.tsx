@@ -1,24 +1,70 @@
+import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { Menu, X } from "lucide-react";
 import { BRAND, socials } from "@/lib/site";
 import { ThemeToggle } from "./ThemeToggle";
 
+const NAV = [
+  { to: "/feed", label: "Feed" },
+  { to: "/articles", label: "Articles" },
+  { to: "/guides", label: "Guides" },
+  { to: "/calculator", label: "Calculator" },
+  { to: "/referrals", label: "Referrals" },
+] as const;
+
 export function Header() {
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
   const link = "text-xs uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors";
   return (
-    <header className="sticky top-0 z-20 border-b border-border bg-background/85 backdrop-blur">
+    <header className="sticky top-0 z-20 border-b border-border bg-background/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
-        <Link to="/" className="font-display text-2xl">
+        <Link to="/" className="font-display text-2xl" onClick={() => setOpen(false)}>
           Xylo <span className="text-gold-gradient italic">Mining</span>
         </Link>
-        <nav className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2 sm:gap-x-8">
-          <Link to="/feed" className={link} activeProps={{ className: "text-foreground" }}>Feed</Link>
-          <Link to="/articles" className={link} activeProps={{ className: "text-foreground" }}>Articles</Link>
-          <Link to="/guides" className={link} activeProps={{ className: "text-foreground" }}>Guides</Link>
-          <Link to="/calculator" className={link} activeProps={{ className: "text-foreground" }}>Calculator</Link>
-          <Link to="/referrals" className={link} activeProps={{ className: "text-foreground" }}>Referrals</Link>
+        <nav aria-label="Main" className="hidden items-center gap-8 md:flex">
+          {NAV.map((n) => (
+            <Link key={n.to} to={n.to} className={link} activeProps={{ className: "text-foreground" }}>{n.label}</Link>
+          ))}
           <ThemeToggle />
         </nav>
+        <div className="flex items-center gap-3 md:hidden">
+          <ThemeToggle />
+          <button
+            type="button"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            onClick={() => setOpen((o) => !o)}
+            className="-mr-2 flex h-11 w-11 items-center justify-center text-foreground"
+          >
+            {open ? <X className="h-6 w-6" aria-hidden="true" /> : <Menu className="h-6 w-6" aria-hidden="true" />}
+          </button>
+        </div>
       </div>
+      {open && (
+        <nav id="mobile-menu" aria-label="Mobile menu" className="border-t border-border md:hidden">
+          <ul className="mx-auto max-w-6xl px-5 py-2">
+            {NAV.map((n) => (
+              <li key={n.to} className="border-b border-border last:border-b-0">
+                <Link
+                  to={n.to}
+                  onClick={() => setOpen(false)}
+                  className="block py-4 text-sm uppercase tracking-[0.2em] text-muted-foreground"
+                  activeProps={{ className: "text-foreground" }}
+                >
+                  {n.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )}
     </header>
   );
 }

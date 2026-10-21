@@ -33,33 +33,84 @@ export const Route = createFileRoute("/calculator")({
 const EXAMPLE_NET: Network = { networkEhs: 1000, subsidyBtc: 3.125, feesPerBlockBtc: 0.1 };
 const EXAMPLE_PRICE = 70000;
 
-type Live = { net: Network; price: number; live: boolean; fiat: Partial<Record<FiatCode, number>> };
+type Live = {
+  net: Network;
+  price: number;
+  /** True when the network figures loaded live from mempool.space. */
+  live: boolean;
+  fiat: Partial<Record<FiatCode, number>>;
+  /** Price of 1 GOMINING token in dollars, or null if unknown. */
+  gmtUsd: number | null;
+  /** Where the BTC price came from. */
+  priceSource: "CoinGecko" | "mempool.space" | "example";
+  /** ISO time the price file was written, when the prices came from CoinGecko. */
+  pricesUpdated: string | null;
+};
+
+const FIATS = ["USD", "AUD", "EUR", "GBP", "CAD", "CHF", "JPY"] as const;
+
+/** Prices come from /prices.json, which a scheduled job refreshes from CoinGecko every 6 hours. */
+async function loadPrices(): Promise<{ price: number; fiat: Partial<Record<FiatCode, number>>; gmtUsd: number | null; updated: string | null } | null> {
+  try {
+    const d = await fetch("/prices.json", { cache: "no-cache" }).then((r) => (r.ok ? r.json() : null));
+    const fiat: Partial<Record<FiatCode, number>> = {};
+    for (const c of FIATS) {
+      const v = Number(d?.btc?.[c.toLowerCase()]);
+      if (v > 0) fiat[c] = v;
+    }
+    const gmt = Number(d?.gmt?.usd);
+    if (!fiat.USD) return null;
+    return { price: fiat.USD, fiat, gmtUsd: gmt > 0 ? gmt : null, updated: typeof d?.updatedAt === "string" ? d.updatedAt : null };
+  } catch {
+    return null;
+  }
+}
 
 function useLiveData(): Live {
-  const [d, setD] = useState<Live>({ net: EXAMPLE_NET, price: EXAMPLE_PRICE, live: false, fiat: { USD: EXAMPLE_PRICE } });
+  const [d, setD] = useState<Live>({
+    net: EXAMPLE_NET, price: EXAMPLE_PRICE, live: false, fiat: { USD: EXAMPLE_PRICE }, gmtUsd: null, priceSource: "example", pricesUpdated: null,
+  });
   useEffect(() => {
     let off = false;
     (async () => {
-      try {
-        const [h, p, r] = await Promise.all([
-          fetch("https://mempool.space/api/v1/mining/hashrate/3d").then((x) => x.json()),
-          fetch("https://mempool.space/api/v1/prices").then((x) => x.json()),
-          fetch("https://mempool.space/api/v1/mining/reward-stats/144").then((x) => x.json()),
-        ]);
-        const ehs = Number(h?.currentHashrate) / 1e18;
-        const price = Number(p?.USD);
-        const fees = Number(r?.totalFee) / 1e8 / Math.max(1, Number(r?.endBlock) - Number(r?.startBlock) + 1);
-        if (!off && ehs > 0 && price > 0 && Number.isFinite(fees)) {
-          const fiat: Partial<Record<FiatCode, number>> = {};
-          for (const c of ["USD", "AUD", "EUR", "GBP", "CAD", "CHF", "JPY"] as const) {
-            const v = Number(p?.[c]);
-            if (v > 0) fiat[c] = v;
+      const [prices, network, mempoolPrices] = await Promise.all([
+        loadPrices(),
+        (async () => {
+          try {
+            const [h, r] = await Promise.all([
+              fetch("https://mempool.space/api/v1/mining/hashrate/3d").then((x) => x.json()),
+              fetch("https://mempool.space/api/v1/mining/reward-stats/144").then((x) => x.json()),
+            ]);
+            const ehs = Number(h?.currentHashrate) / 1e18;
+            const fees = Number(r?.totalFee) / 1e8 / Math.max(1, Number(r?.endBlock) - Number(r?.startBlock) + 1);
+            return ehs > 0 && Number.isFinite(fees) ? { networkEhs: ehs, subsidyBtc: 3.125, feesPerBlockBtc: fees } : null;
+          } catch {
+            return null;
           }
-          setD({ net: { networkEhs: ehs, subsidyBtc: 3.125, feesPerBlockBtc: fees }, price, live: true, fiat });
+        })(),
+        (async () => {
+          try {
+            const p = await fetch("https://mempool.space/api/v1/prices").then((x) => x.json());
+            const fiat: Partial<Record<FiatCode, number>> = {};
+            for (const c of FIATS) { const v = Number(p?.[c]); if (v > 0) fiat[c] = v; }
+            return fiat.USD ? fiat : null;
+          } catch {
+            return null;
+          }
+        })(),
+      ]);
+      if (off) return;
+      setD((cur) => {
+        const next: Live = { ...cur };
+        if (network) { next.net = network; next.live = true; }
+        if (prices) {
+          next.price = prices.price; next.fiat = prices.fiat; next.gmtUsd = prices.gmtUsd;
+          next.priceSource = "CoinGecko"; next.pricesUpdated = prices.updated;
+        } else if (mempoolPrices) {
+          next.price = mempoolPrices.USD!; next.fiat = mempoolPrices; next.priceSource = "mempool.space";
         }
-      } catch {
-        /* keep the labelled example values */
-      }
+        return next;
+      });
     })();
     return () => { off = true; };
   }, []);
@@ -141,7 +192,12 @@ function Calculator() {
           <TabsContent value="gomining"><GoMiningTab live={live} /></TabsContent>
         </Tabs>
         <p className="pt-10 text-xs text-muted-foreground">
-          Network data {live.live ? "loaded live from mempool.space." : "could not be loaded, so example values are shown (1,000 EH/s, $70,000). Edit the price to match today."} Rewards use the current 3.125 BTC block subsidy plus recent average fees.
+          {live.priceSource === "CoinGecko"
+            ? `BTC and GOMINING prices from CoinGecko, refreshed every 6 hours${live.pricesUpdated ? ` (last update ${new Date(live.pricesUpdated).toLocaleString("en-AU", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "UTC" })} UTC)` : ""}. `
+            : live.priceSource === "mempool.space"
+              ? "BTC price from mempool.space (CoinGecko prices were not available). "
+              : "Live prices could not be loaded, so an example BTC price is shown. Edit it to match today. "}
+          {live.live ? "Network hashrate and fees loaded live from mempool.space." : "Network figures could not be loaded, so an example of 1,000 EH/s is used."} Rewards use the current 3.125 BTC block subsidy plus recent average fees.
         </p>
       </main>
       <Footer />
@@ -157,7 +213,7 @@ function BitcoinTab({ live }: { live: Live }) {
   const [priceIn, setPriceIn] = useState<string | null>(null);
   const price = priceIn === null ? live.price : num(priceIn);
   const [cost, setCost] = useState<CostState>(initialCost);
-  const costCtx = { btcUsd: price, fiatPerBtc: live.fiat };
+  const costCtx = { btcUsd: price, fiatPerBtc: live.fiat, gmtLive: live.gmtUsd };
   const costUsd = costUsdOf(cost, costCtx) ?? 0;
   const costs = { electricityPerKwh: num(maint), servicePerThDay: 0, discountPct: num(disc) };
   return (
@@ -187,7 +243,7 @@ function GoMiningTab({ live }: { live: Live }) {
   const [priceIn, setPriceIn] = useState<string | null>(null);
   const price = priceIn === null ? live.price : num(priceIn);
   const [cost, setCost] = useState<CostState>(initialCost);
-  const costCtx = { btcUsd: price, fiatPerBtc: live.fiat };
+  const costCtx = { btcUsd: price, fiatPerBtc: live.fiat, gmtLive: live.gmtUsd };
   const costUsd = costUsdOf(cost, costCtx) ?? 0;
   const costs = { electricityPerKwh: GOMINING_RATES.electricityPerKwh, servicePerThDay: GOMINING_RATES.servicePerThDay, discountPct: num(disc) };
   return (

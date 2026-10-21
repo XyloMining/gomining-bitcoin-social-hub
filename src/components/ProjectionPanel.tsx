@@ -17,7 +17,7 @@ type Props = { th: number; w: number; price: number; net: Network; costs: Costs;
 /** Growth graph and reinvest comparison, sharing one set of assumptions. */
 export function ProjectionPanel({ th, w, price, net, costs, costUsd }: Props) {
   const [months, setMonths] = useState("12");
-  const [netGrowth, setNetGrowth] = useState("1");
+  const [netGrowth, setNetGrowth] = useState("0");
   const [priceGrowth, setPriceGrowth] = useState("0");
   const [pct, setPct] = useState("100");
   const n = clampMonths(months, 12);
@@ -45,7 +45,7 @@ export function ProjectionPanel({ th, w, price, net, costs, costUsd }: Props) {
       </p>
       <div className="mt-6 grid gap-5 sm:grid-cols-3 lg:max-w-3xl">
         <Field id="p-m" label="Months ahead" hint="1 to 60." value={months} onChange={setMonths} />
-        <Field id="p-n" label="Network growth per month (%)" hint="Assumption." value={netGrowth} onChange={setNetGrowth} />
+        <Field id="p-n" label="Network growth per month (%)" hint="Assumption. 0 means no growth; real networks usually grow." value={netGrowth} onChange={setNetGrowth} />
         <Field id="p-p" label="BTC price change per month (%)" hint="Assumption. Negative for falls." value={priceGrowth} onChange={setPriceGrowth} />
       </div>
 
