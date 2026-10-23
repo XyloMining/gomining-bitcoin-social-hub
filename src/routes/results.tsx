@@ -79,14 +79,15 @@ function Data({ file }: { file: ResultsFile }) {
   const cum = useMemo(() => cumulative(days), [days]);
   const months = useMemo(() => monthly(days), [days]);
   const labels = days.map((d) => fmtDate(d.date));
-  const tick = (n: number) => shortDate(days[n]?.date ?? file.from);
+  const tick = (n: number) =>
+    new Date((days[n]?.date ?? file.from) + "T00:00:00Z").toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "2-digit", timeZone: "UTC" });
   const netUsd = s.grossUsd - s.maintenanceUsd;
   const share = s.maintenanceShare === null ? "n/a" : Math.round(s.maintenanceShare * 100) + "%";
 
   return (
     <>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <Tile k="Period" v={`${shortDate(file.from)} to ${shortDate(file.to)}`} sub={`${s.dayCount} days of data${s.missingDays ? `, ${s.missingDays} days missing from the export` : ""}`} />
+        <Tile k="Period" v={`${monthName(file.from.slice(0, 7))} to ${monthName(file.to.slice(0, 7))}`} sub={`${s.dayCount} days of data${s.missingDays ? `, ${s.missingDays} days missing from the export` : ""}`} />
         <Tile k="Hashrate now" v={`${s.currentTh.toFixed(2)} TH`} sub={`Started the period at ${days[0]!.th.toFixed(2)} TH`} />
         <Tile k="Bitcoin mined (gross)" v={btc(s.grossBtc)} sub={`About ${usd(s.grossUsd, 0)} at each day's price`} />
         <Tile k="Maintenance paid" v={btc(s.maintenanceBtc)} sub={`About ${usd(s.maintenanceUsd, 0)}. Electricity plus service fee`} />
@@ -172,7 +173,7 @@ function Data({ file }: { file: ResultsFile }) {
           <li>Dollar amounts use the Bitcoin price recorded for each day. They are approximate.</li>
           <li>The figures leave out what I paid for the miners, the GOMINING tokens I used for maintenance, and any tax.</li>
           <li>{s.missingDays > 0 ? `${s.missingDays} days are missing from the export, so totals are a little lower than the true amounts. ` : ""}A few days show maintenance with no reward (reward protection), and I count that maintenance as recorded.</li>
-          <li>The data starts on {fmtDate(file.from)}. Older months will be added later.</li>
+          <li>The data starts on {fmtDate(file.from)}. Older months may be added later.</li>
         </ul>
       </section>
     </>

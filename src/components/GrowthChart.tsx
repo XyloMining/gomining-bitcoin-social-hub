@@ -69,7 +69,7 @@ export function GrowthChart({ title, summary, series, labels, format, xTitle = "
         ))}
         {labels.map((l, n) =>
           n === 0 || n === last || n % Math.max(1, Math.round(last / 6)) === 0 ? (
-            <text key={l} x={x(n)} y={H - 8} textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">{tick(n)}</text>
+            <text key={l} x={x(n)} y={H - 8} textAnchor={n === last && last > 0 ? "end" : "middle"} fontSize="11" fill="var(--muted-foreground)">{tick(n)}</text>
           ) : null,
         )}
         {series.map((s) => (
