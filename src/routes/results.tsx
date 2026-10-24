@@ -87,7 +87,7 @@ function Data({ file }: { file: ResultsFile }) {
   return (
     <>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <Tile k="Period" v={`${monthName(file.from.slice(0, 7))} to ${monthName(file.to.slice(0, 7))}`} sub={`${s.dayCount} days of data${s.missingDays ? `, ${s.missingDays} days missing from the export` : ""}`} />
+        <Tile k="Period" v={`${monthName(file.from.slice(0, 7))} to ${monthName(file.to.slice(0, 7))}`} sub={`${s.dayCount} days of data${s.missingDays ? `, ${s.missingDays} days with no earnings recorded` : ""}`} />
         <Tile k="Hashrate now" v={`${s.currentTh.toFixed(2)} TH`} sub={`Started the period at ${days[0]!.th.toFixed(2)} TH`} />
         <Tile k="Bitcoin mined (gross)" v={btc(s.grossBtc)} sub={`About ${usd(s.grossUsd, 0)} at each day's price`} />
         <Tile k="Maintenance paid" v={btc(s.maintenanceBtc)} sub={`About ${usd(s.maintenanceUsd, 0)}. Electricity plus service fee`} />
@@ -172,7 +172,8 @@ function Data({ file }: { file: ResultsFile }) {
           <li>"Maintenance" is electricity plus the service fee, as recorded. Most of it was paid with GOMINING tokens, and it is shown here in its BTC value so everything is in one unit.</li>
           <li>Dollar amounts use the Bitcoin price recorded for each day. They are approximate.</li>
           <li>The figures leave out what I paid for the miners, the GOMINING tokens I used for maintenance, and any tax.</li>
-          <li>{s.missingDays > 0 ? `${s.missingDays} days are missing from the export, so totals are a little lower than the true amounts. ` : ""}A few days show maintenance with no reward (reward protection), and I count that maintenance as recorded.</li>
+          <li>{s.missingDays > 0 ? `${s.missingDays} days do not appear in the export. They are most likely days with no earnings, when maintenance was higher than the reward, so nothing was paid out and they add nothing to the totals. ` : ""}A few days show maintenance with no reward (reward protection), and I count that maintenance as recorded.</li>
+          <li>The 16 TH miner was a bonus miner that earned only on days I completed activities and bonus tasks, which is why hashrate and rewards swing a lot in late 2025. Bonus miners have since changed to permanent TH paid in GOMINING tokens to new users, and my hashrate has grown by opening GoBoxes.</li>
           <li>The data starts on {fmtDate(file.from)}. Older months may be added later.</li>
         </ul>
       </section>
