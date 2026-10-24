@@ -15,6 +15,7 @@ import { Route as CalculatorRouteImport } from './routes/calculator'
 import { Route as FeedRouteImport } from './routes/feed'
 import { Route as ReferralsRouteImport } from './routes/referrals'
 import { Route as ResultsRouteImport } from './routes/results'
+import { Route as StatsRouteImport } from './routes/stats'
 import { Route as FeedIndexRouteImport } from './routes/feed.index'
 import { Route as FeedTiktokRouteImport } from './routes/feed.tiktok'
 import { Route as FeedXRouteImport } from './routes/feed.x'
@@ -50,6 +51,11 @@ const ReferralsRoute = ReferralsRouteImport.update({
 const ResultsRoute = ResultsRouteImport.update({
   id: '/results',
   path: '/results',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StatsRoute = StatsRouteImport.update({
+  id: '/stats',
+  path: '/stats',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FeedIndexRoute = FeedIndexRouteImport.update({
@@ -90,6 +96,7 @@ export interface FileRoutesByFullPath {
   '/feed': typeof FeedRouteWithChildren
   '/referrals': typeof ReferralsRoute
   '/results': typeof ResultsRoute
+  '/stats': typeof StatsRoute
   '/feed/tiktok': typeof FeedTiktokRoute
   '/feed/x': typeof FeedXRoute
   '/feed/youtube': typeof FeedYoutubeRoute
@@ -103,6 +110,7 @@ export interface FileRoutesByTo {
   '/calculator': typeof CalculatorRoute
   '/referrals': typeof ReferralsRoute
   '/results': typeof ResultsRoute
+  '/stats': typeof StatsRoute
   '/feed/tiktok': typeof FeedTiktokRoute
   '/feed/x': typeof FeedXRoute
   '/feed/youtube': typeof FeedYoutubeRoute
@@ -118,6 +126,7 @@ export interface FileRoutesById {
   '/feed': typeof FeedRouteWithChildren
   '/referrals': typeof ReferralsRoute
   '/results': typeof ResultsRoute
+  '/stats': typeof StatsRoute
   '/feed/tiktok': typeof FeedTiktokRoute
   '/feed/x': typeof FeedXRoute
   '/feed/youtube': typeof FeedYoutubeRoute
@@ -134,6 +143,7 @@ export interface FileRouteTypes {
     | '/feed'
     | '/referrals'
     | '/results'
+    | '/stats'
     | '/feed/tiktok'
     | '/feed/x'
     | '/feed/youtube'
@@ -147,6 +157,7 @@ export interface FileRouteTypes {
     | '/calculator'
     | '/referrals'
     | '/results'
+    | '/stats'
     | '/feed/tiktok'
     | '/feed/x'
     | '/feed/youtube'
@@ -161,6 +172,7 @@ export interface FileRouteTypes {
     | '/feed'
     | '/referrals'
     | '/results'
+    | '/stats'
     | '/feed/tiktok'
     | '/feed/x'
     | '/feed/youtube'
@@ -176,6 +188,7 @@ export interface RootRouteChildren {
   FeedRoute: typeof FeedRouteWithChildren
   ReferralsRoute: typeof ReferralsRoute
   ResultsRoute: typeof ResultsRoute
+  StatsRoute: typeof StatsRoute
   GuidesSlugRoute: typeof GuidesSlugRoute
   GuidesIndexRoute: typeof GuidesIndexRoute
 }
@@ -222,6 +235,13 @@ declare module '@tanstack/react-router' {
       path: '/results'
       fullPath: '/results'
       preLoaderRoute: typeof ResultsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/stats': {
+      id: '/stats'
+      path: '/stats'
+      fullPath: '/stats'
+      preLoaderRoute: typeof StatsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/feed/': {
@@ -292,6 +312,7 @@ const rootRouteChildren: RootRouteChildren = {
   FeedRoute: FeedRouteWithChildren,
   ReferralsRoute: ReferralsRoute,
   ResultsRoute: ResultsRoute,
+  StatsRoute: StatsRoute,
   GuidesSlugRoute: GuidesSlugRoute,
   GuidesIndexRoute: GuidesIndexRoute,
 }

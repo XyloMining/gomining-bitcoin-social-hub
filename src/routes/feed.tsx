@@ -1,6 +1,7 @@
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { Header, Footer, SectionTitle } from "@/components/SiteChrome";
 import { SocialGrid } from "@/components/Cards";
+import { StatsSection } from "@/components/StatsSection";
 import { postsQuery } from "@/lib/posts-query";
 
 export const Route = createFileRoute("/feed")({
@@ -21,6 +22,7 @@ function FeedLayout() {
       <Header />
       <main className="mx-auto max-w-6xl px-5 pt-16">
         <SectionTitle eyebrow="Updated automatically" title="The feed" />
+        <StatsSection />
         <nav className="mb-10 flex gap-6 overflow-x-auto border-b border-border">
           {tabs.map((t) => (
             <Link
