@@ -13,6 +13,7 @@ const tabs = [
   { to: "/feed", label: "All" },
   { to: "/feed/youtube", label: "YouTube" },
   { to: "/feed/tiktok", label: "TikTok" },
+  { to: "/feed/instagram", label: "Instagram" },
   { to: "/feed/x", label: "X" },
 ] as const;
 
