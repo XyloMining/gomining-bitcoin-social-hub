@@ -9,6 +9,7 @@ export const getRouter = () => {
     routeTree,
     context: { queryClient },
     scrollRestoration: true,
+    trailingSlash: "always", // links match the canonical and sitemap URLs, so crawlers never hit a redirect
     defaultPreloadStaleTime: 0,
   });
 
