@@ -9,7 +9,7 @@ const GROUPS = [
   { title: "Follow", items: [{ to: "/socials/", label: "Socials" }, { to: "/articles/", label: "Articles" }] },
   { title: "Learn", items: [{ to: "/guides/", label: "Guides" }, { to: "/calculator/", label: "Calculator" }] },
   { title: "My numbers", items: [{ to: "/results/", label: "My results" }, { to: "/stats/", label: "Stats" }] },
-  { title: "Support", items: [{ to: "/referrals/", label: "Referrals" }] },
+  { title: "Get started", items: [{ to: "/referrals/", label: "Referrals" }] },
 ] as const;
 const NAV = GROUPS.flatMap((g) => [...g.items]);
 
@@ -52,8 +52,8 @@ export function Header() {
         <nav id="mobile-menu" aria-label="Mobile menu" className="max-h-[calc(100dvh-4.5rem)] overflow-y-auto border-t border-border lg:hidden">
           <div className="mx-auto max-w-6xl space-y-6 px-5 py-6">
             {GROUPS.map((g) => (
-              <section key={g.title} aria-labelledby={`menu-${g.title}`}>
-                <h2 id={`menu-${g.title}`} className="eyebrow mb-1">{g.title}</h2>
+              <section key={g.title} aria-labelledby={`menu-${g.title.replace(/ /g, "-")}`}>
+                <h2 id={`menu-${g.title.replace(/ /g, "-")}`} className="eyebrow mb-1">{g.title}</h2>
                 <ul>
                   {g.items.map((n) => (
                     <li key={n.to} className="border-b border-border last:border-b-0">
