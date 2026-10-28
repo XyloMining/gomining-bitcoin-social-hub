@@ -12,17 +12,18 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ArticlesRouteImport } from './routes/articles'
 import { Route as CalculatorRouteImport } from './routes/calculator'
-import { Route as FeedRouteImport } from './routes/feed'
 import { Route as ReferralsRouteImport } from './routes/referrals'
 import { Route as ResultsRouteImport } from './routes/results'
+import { Route as SocialsRouteImport } from './routes/socials'
 import { Route as StatsRouteImport } from './routes/stats'
-import { Route as FeedIndexRouteImport } from './routes/feed.index'
-import { Route as FeedInstagramRouteImport } from './routes/feed.instagram'
-import { Route as FeedTiktokRouteImport } from './routes/feed.tiktok'
-import { Route as FeedXRouteImport } from './routes/feed.x'
-import { Route as FeedYoutubeRouteImport } from './routes/feed.youtube'
 import { Route as GuidesIndexRouteImport } from './routes/guides.index'
 import { Route as GuidesSlugRouteImport } from './routes/guides.$slug'
+import { Route as SocialsIndexRouteImport } from './routes/socials.index'
+import { Route as SocialsInstagramRouteImport } from './routes/socials.instagram'
+import { Route as SocialsRedditRouteImport } from './routes/socials.reddit'
+import { Route as SocialsTiktokRouteImport } from './routes/socials.tiktok'
+import { Route as SocialsXRouteImport } from './routes/socials.x'
+import { Route as SocialsYoutubeRouteImport } from './routes/socials.youtube'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -39,11 +40,6 @@ const CalculatorRoute = CalculatorRouteImport.update({
   path: '/calculator',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FeedRoute = FeedRouteImport.update({
-  id: '/feed',
-  path: '/feed',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ReferralsRoute = ReferralsRouteImport.update({
   id: '/referrals',
   path: '/referrals',
@@ -54,35 +50,15 @@ const ResultsRoute = ResultsRouteImport.update({
   path: '/results',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SocialsRoute = SocialsRouteImport.update({
+  id: '/socials',
+  path: '/socials',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StatsRoute = StatsRouteImport.update({
   id: '/stats',
   path: '/stats',
   getParentRoute: () => rootRouteImport,
-} as any)
-const FeedIndexRoute = FeedIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => FeedRoute,
-} as any)
-const FeedInstagramRoute = FeedInstagramRouteImport.update({
-  id: '/instagram',
-  path: '/instagram',
-  getParentRoute: () => FeedRoute,
-} as any)
-const FeedTiktokRoute = FeedTiktokRouteImport.update({
-  id: '/tiktok',
-  path: '/tiktok',
-  getParentRoute: () => FeedRoute,
-} as any)
-const FeedXRoute = FeedXRouteImport.update({
-  id: '/x',
-  path: '/x',
-  getParentRoute: () => FeedRoute,
-} as any)
-const FeedYoutubeRoute = FeedYoutubeRouteImport.update({
-  id: '/youtube',
-  path: '/youtube',
-  getParentRoute: () => FeedRoute,
 } as any)
 const GuidesIndexRoute = GuidesIndexRouteImport.update({
   id: '/guides/',
@@ -94,22 +70,53 @@ const GuidesSlugRoute = GuidesSlugRouteImport.update({
   path: '/guides/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SocialsIndexRoute = SocialsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => SocialsRoute,
+} as any)
+const SocialsInstagramRoute = SocialsInstagramRouteImport.update({
+  id: '/instagram',
+  path: '/instagram',
+  getParentRoute: () => SocialsRoute,
+} as any)
+const SocialsRedditRoute = SocialsRedditRouteImport.update({
+  id: '/reddit',
+  path: '/reddit',
+  getParentRoute: () => SocialsRoute,
+} as any)
+const SocialsTiktokRoute = SocialsTiktokRouteImport.update({
+  id: '/tiktok',
+  path: '/tiktok',
+  getParentRoute: () => SocialsRoute,
+} as any)
+const SocialsXRoute = SocialsXRouteImport.update({
+  id: '/x',
+  path: '/x',
+  getParentRoute: () => SocialsRoute,
+} as any)
+const SocialsYoutubeRoute = SocialsYoutubeRouteImport.update({
+  id: '/youtube',
+  path: '/youtube',
+  getParentRoute: () => SocialsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/articles': typeof ArticlesRoute
   '/calculator': typeof CalculatorRoute
-  '/feed': typeof FeedRouteWithChildren
   '/referrals': typeof ReferralsRoute
   '/results': typeof ResultsRoute
+  '/socials': typeof SocialsRouteWithChildren
   '/stats': typeof StatsRoute
-  '/feed/instagram': typeof FeedInstagramRoute
-  '/feed/tiktok': typeof FeedTiktokRoute
-  '/feed/x': typeof FeedXRoute
-  '/feed/youtube': typeof FeedYoutubeRoute
   '/guides/$slug': typeof GuidesSlugRoute
-  '/feed/': typeof FeedIndexRoute
+  '/socials/instagram': typeof SocialsInstagramRoute
+  '/socials/reddit': typeof SocialsRedditRoute
+  '/socials/tiktok': typeof SocialsTiktokRoute
+  '/socials/x': typeof SocialsXRoute
+  '/socials/youtube': typeof SocialsYoutubeRoute
   '/guides/': typeof GuidesIndexRoute
+  '/socials/': typeof SocialsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -118,30 +125,32 @@ export interface FileRoutesByTo {
   '/referrals': typeof ReferralsRoute
   '/results': typeof ResultsRoute
   '/stats': typeof StatsRoute
-  '/feed/instagram': typeof FeedInstagramRoute
-  '/feed/tiktok': typeof FeedTiktokRoute
-  '/feed/x': typeof FeedXRoute
-  '/feed/youtube': typeof FeedYoutubeRoute
   '/guides/$slug': typeof GuidesSlugRoute
-  '/feed': typeof FeedIndexRoute
+  '/socials/instagram': typeof SocialsInstagramRoute
+  '/socials/reddit': typeof SocialsRedditRoute
+  '/socials/tiktok': typeof SocialsTiktokRoute
+  '/socials/x': typeof SocialsXRoute
+  '/socials/youtube': typeof SocialsYoutubeRoute
   '/guides': typeof GuidesIndexRoute
+  '/socials': typeof SocialsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/articles': typeof ArticlesRoute
   '/calculator': typeof CalculatorRoute
-  '/feed': typeof FeedRouteWithChildren
   '/referrals': typeof ReferralsRoute
   '/results': typeof ResultsRoute
+  '/socials': typeof SocialsRouteWithChildren
   '/stats': typeof StatsRoute
-  '/feed/instagram': typeof FeedInstagramRoute
-  '/feed/tiktok': typeof FeedTiktokRoute
-  '/feed/x': typeof FeedXRoute
-  '/feed/youtube': typeof FeedYoutubeRoute
   '/guides/$slug': typeof GuidesSlugRoute
-  '/feed/': typeof FeedIndexRoute
+  '/socials/instagram': typeof SocialsInstagramRoute
+  '/socials/reddit': typeof SocialsRedditRoute
+  '/socials/tiktok': typeof SocialsTiktokRoute
+  '/socials/x': typeof SocialsXRoute
+  '/socials/youtube': typeof SocialsYoutubeRoute
   '/guides/': typeof GuidesIndexRoute
+  '/socials/': typeof SocialsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -149,17 +158,18 @@ export interface FileRouteTypes {
     | '/'
     | '/articles'
     | '/calculator'
-    | '/feed'
     | '/referrals'
     | '/results'
+    | '/socials'
     | '/stats'
-    | '/feed/instagram'
-    | '/feed/tiktok'
-    | '/feed/x'
-    | '/feed/youtube'
     | '/guides/$slug'
-    | '/feed/'
+    | '/socials/instagram'
+    | '/socials/reddit'
+    | '/socials/tiktok'
+    | '/socials/x'
+    | '/socials/youtube'
     | '/guides/'
+    | '/socials/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -168,38 +178,40 @@ export interface FileRouteTypes {
     | '/referrals'
     | '/results'
     | '/stats'
-    | '/feed/instagram'
-    | '/feed/tiktok'
-    | '/feed/x'
-    | '/feed/youtube'
     | '/guides/$slug'
-    | '/feed'
+    | '/socials/instagram'
+    | '/socials/reddit'
+    | '/socials/tiktok'
+    | '/socials/x'
+    | '/socials/youtube'
     | '/guides'
+    | '/socials'
   id:
     | '__root__'
     | '/'
     | '/articles'
     | '/calculator'
-    | '/feed'
     | '/referrals'
     | '/results'
+    | '/socials'
     | '/stats'
-    | '/feed/instagram'
-    | '/feed/tiktok'
-    | '/feed/x'
-    | '/feed/youtube'
     | '/guides/$slug'
-    | '/feed/'
+    | '/socials/instagram'
+    | '/socials/reddit'
+    | '/socials/tiktok'
+    | '/socials/x'
+    | '/socials/youtube'
     | '/guides/'
+    | '/socials/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ArticlesRoute: typeof ArticlesRoute
   CalculatorRoute: typeof CalculatorRoute
-  FeedRoute: typeof FeedRouteWithChildren
   ReferralsRoute: typeof ReferralsRoute
   ResultsRoute: typeof ResultsRoute
+  SocialsRoute: typeof SocialsRouteWithChildren
   StatsRoute: typeof StatsRoute
   GuidesSlugRoute: typeof GuidesSlugRoute
   GuidesIndexRoute: typeof GuidesIndexRoute
@@ -228,13 +240,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CalculatorRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/feed': {
-      id: '/feed'
-      path: '/feed'
-      fullPath: '/feed'
-      preLoaderRoute: typeof FeedRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/referrals': {
       id: '/referrals'
       path: '/referrals'
@@ -249,47 +254,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResultsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/socials': {
+      id: '/socials'
+      path: '/socials'
+      fullPath: '/socials'
+      preLoaderRoute: typeof SocialsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/stats': {
       id: '/stats'
       path: '/stats'
       fullPath: '/stats'
       preLoaderRoute: typeof StatsRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/feed/': {
-      id: '/feed/'
-      path: '/'
-      fullPath: '/feed/'
-      preLoaderRoute: typeof FeedIndexRouteImport
-      parentRoute: typeof FeedRoute
-    }
-    '/feed/instagram': {
-      id: '/feed/instagram'
-      path: '/instagram'
-      fullPath: '/feed/instagram'
-      preLoaderRoute: typeof FeedInstagramRouteImport
-      parentRoute: typeof FeedRoute
-    }
-    '/feed/tiktok': {
-      id: '/feed/tiktok'
-      path: '/tiktok'
-      fullPath: '/feed/tiktok'
-      preLoaderRoute: typeof FeedTiktokRouteImport
-      parentRoute: typeof FeedRoute
-    }
-    '/feed/x': {
-      id: '/feed/x'
-      path: '/x'
-      fullPath: '/feed/x'
-      preLoaderRoute: typeof FeedXRouteImport
-      parentRoute: typeof FeedRoute
-    }
-    '/feed/youtube': {
-      id: '/feed/youtube'
-      path: '/youtube'
-      fullPath: '/feed/youtube'
-      preLoaderRoute: typeof FeedYoutubeRouteImport
-      parentRoute: typeof FeedRoute
     }
     '/guides/': {
       id: '/guides/'
@@ -305,34 +282,79 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GuidesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/socials/': {
+      id: '/socials/'
+      path: '/'
+      fullPath: '/socials/'
+      preLoaderRoute: typeof SocialsIndexRouteImport
+      parentRoute: typeof SocialsRoute
+    }
+    '/socials/instagram': {
+      id: '/socials/instagram'
+      path: '/instagram'
+      fullPath: '/socials/instagram'
+      preLoaderRoute: typeof SocialsInstagramRouteImport
+      parentRoute: typeof SocialsRoute
+    }
+    '/socials/reddit': {
+      id: '/socials/reddit'
+      path: '/reddit'
+      fullPath: '/socials/reddit'
+      preLoaderRoute: typeof SocialsRedditRouteImport
+      parentRoute: typeof SocialsRoute
+    }
+    '/socials/tiktok': {
+      id: '/socials/tiktok'
+      path: '/tiktok'
+      fullPath: '/socials/tiktok'
+      preLoaderRoute: typeof SocialsTiktokRouteImport
+      parentRoute: typeof SocialsRoute
+    }
+    '/socials/x': {
+      id: '/socials/x'
+      path: '/x'
+      fullPath: '/socials/x'
+      preLoaderRoute: typeof SocialsXRouteImport
+      parentRoute: typeof SocialsRoute
+    }
+    '/socials/youtube': {
+      id: '/socials/youtube'
+      path: '/youtube'
+      fullPath: '/socials/youtube'
+      preLoaderRoute: typeof SocialsYoutubeRouteImport
+      parentRoute: typeof SocialsRoute
+    }
   }
 }
 
-interface FeedRouteChildren {
-  FeedInstagramRoute: typeof FeedInstagramRoute
-  FeedTiktokRoute: typeof FeedTiktokRoute
-  FeedXRoute: typeof FeedXRoute
-  FeedYoutubeRoute: typeof FeedYoutubeRoute
-  FeedIndexRoute: typeof FeedIndexRoute
+interface SocialsRouteChildren {
+  SocialsInstagramRoute: typeof SocialsInstagramRoute
+  SocialsRedditRoute: typeof SocialsRedditRoute
+  SocialsTiktokRoute: typeof SocialsTiktokRoute
+  SocialsXRoute: typeof SocialsXRoute
+  SocialsYoutubeRoute: typeof SocialsYoutubeRoute
+  SocialsIndexRoute: typeof SocialsIndexRoute
 }
 
-const FeedRouteChildren: FeedRouteChildren = {
-  FeedInstagramRoute: FeedInstagramRoute,
-  FeedTiktokRoute: FeedTiktokRoute,
-  FeedXRoute: FeedXRoute,
-  FeedYoutubeRoute: FeedYoutubeRoute,
-  FeedIndexRoute: FeedIndexRoute,
+const SocialsRouteChildren: SocialsRouteChildren = {
+  SocialsInstagramRoute: SocialsInstagramRoute,
+  SocialsRedditRoute: SocialsRedditRoute,
+  SocialsTiktokRoute: SocialsTiktokRoute,
+  SocialsXRoute: SocialsXRoute,
+  SocialsYoutubeRoute: SocialsYoutubeRoute,
+  SocialsIndexRoute: SocialsIndexRoute,
 }
 
-const FeedRouteWithChildren = FeedRoute._addFileChildren(FeedRouteChildren)
+const SocialsRouteWithChildren =
+  SocialsRoute._addFileChildren(SocialsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ArticlesRoute: ArticlesRoute,
   CalculatorRoute: CalculatorRoute,
-  FeedRoute: FeedRouteWithChildren,
   ReferralsRoute: ReferralsRoute,
   ResultsRoute: ResultsRoute,
+  SocialsRoute: SocialsRouteWithChildren,
   StatsRoute: StatsRoute,
   GuidesSlugRoute: GuidesSlugRoute,
   GuidesIndexRoute: GuidesIndexRoute,

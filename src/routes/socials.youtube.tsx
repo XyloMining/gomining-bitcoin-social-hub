@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PlatformFeed } from "@/components/PlatformFeed";
 
-export const Route = createFileRoute("/feed/youtube")({
+export const Route = createFileRoute("/socials/youtube")({
   head: () => ({
     meta: [
       { title: "YouTube videos | Xylo Mining" },

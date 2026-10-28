@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PlatformFeed } from "@/components/PlatformFeed";
 
-export const Route = createFileRoute("/feed/tiktok")({
+export const Route = createFileRoute("/socials/tiktok")({
   head: () => ({
     meta: [
       { title: "TikTok videos | Xylo Mining" },

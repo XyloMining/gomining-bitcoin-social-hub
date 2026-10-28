@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 
 export type FeedPost = {
   id: string;
-  platform: "YouTube" | "Reddit" | "TikTok" | "Instagram";
+  platform: "YouTube" | "Reddit" | "TikTok" | "Instagram" | "X";
   title: string;
   url: string;
   date: string;

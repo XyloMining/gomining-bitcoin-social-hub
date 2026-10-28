@@ -5,7 +5,7 @@ import { BRAND, socials } from "@/lib/site";
 import { ThemeToggle } from "./ThemeToggle";
 
 const NAV = [
-  { to: "/feed", label: "Feed" },
+  { to: "/socials", label: "Socials" },
   { to: "/articles", label: "Articles" },
   { to: "/guides", label: "Guides" },
   { to: "/calculator", label: "Calculator" },

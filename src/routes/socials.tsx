@@ -4,17 +4,18 @@ import { SocialGrid } from "@/components/Cards";
 import { StatsSection } from "@/components/StatsSection";
 import { postsQuery } from "@/lib/posts-query";
 
-export const Route = createFileRoute("/feed")({
+export const Route = createFileRoute("/socials")({
   loader: ({ context }) => context.queryClient.ensureQueryData(postsQuery),
   component: FeedLayout,
 });
 
 const tabs = [
-  { to: "/feed", label: "All" },
-  { to: "/feed/youtube", label: "YouTube" },
-  { to: "/feed/tiktok", label: "TikTok" },
-  { to: "/feed/instagram", label: "Instagram" },
-  { to: "/feed/x", label: "X" },
+  { to: "/socials", label: "All" },
+  { to: "/socials/youtube", label: "YouTube" },
+  { to: "/socials/tiktok", label: "TikTok" },
+  { to: "/socials/instagram", label: "Instagram" },
+  { to: "/socials/reddit", label: "Reddit" },
+  { to: "/socials/x", label: "X" },
 ] as const;
 
 function FeedLayout() {
@@ -22,7 +23,7 @@ function FeedLayout() {
     <div className="min-h-screen">
       <Header />
       <main className="mx-auto max-w-6xl px-5 pt-16">
-        <SectionTitle eyebrow="Updated automatically" title="The feed" />
+        <SectionTitle eyebrow="Updated automatically" title="Socials" />
         <StatsSection />
         <nav className="mb-10 flex gap-6 overflow-x-auto border-b border-border">
           {tabs.map((t) => (

@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { XTimeline } from "@/components/XTimeline";
+import { PlatformFeed } from "@/components/PlatformFeed";
 
-export const Route = createFileRoute("/feed/x")({
+export const Route = createFileRoute("/socials/x")({
   head: () => ({
     meta: [
       { title: "X posts | Xylo Mining" },
@@ -12,5 +13,10 @@ export const Route = createFileRoute("/feed/x")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: () => <XTimeline />,
+  component: () => (
+    <div className="space-y-12">
+      <PlatformFeed platform="X" emptyNote={null} />
+      <XTimeline />
+    </div>
+  ),
 });

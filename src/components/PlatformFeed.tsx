@@ -8,7 +8,7 @@ import type { FeedPost } from "@/lib/feed.functions";
 const grid = "grid gap-6 sm:grid-cols-2 lg:grid-cols-3";
 
 /** One platform: its top post, then its 5 most recent. No platform: the same choice from every platform, merged. */
-export function PlatformFeed({ platform }: { platform?: FeedPost["platform"] }) {
+export function PlatformFeed({ platform, emptyNote }: { platform?: FeedPost["platform"]; emptyNote?: null }) {
   const { data } = useSuspenseQuery(postsQuery);
   if (!platform) {
     const posts = mergePosts(featuredPerPlatform(data));
@@ -16,7 +16,7 @@ export function PlatformFeed({ platform }: { platform?: FeedPost["platform"] }) 
     return <div className={grid}>{posts.map((p) => <PostCard key={p.id} p={p} />)}</div>;
   }
   const { top, recent } = selectFeatured(data.filter((p) => p.platform === platform));
-  if (!top && !recent.length) return <p className="text-muted-foreground">New posts are on the way.</p>;
+  if (!top && !recent.length) return emptyNote === null ? null : <p className="text-muted-foreground">New posts are on the way.</p>;
   return (
     <div className="space-y-12">
       {top && (

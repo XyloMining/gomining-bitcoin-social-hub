@@ -45,7 +45,7 @@ function Index() {
             <a href={gm.url} target="_blank" rel="noreferrer" className="bg-primary px-7 py-4 text-xs uppercase tracking-[0.2em] text-primary-foreground hover:bg-gold-deep">
               Start on GoMining
             </a>
-            <Link to="/feed" className="border border-foreground px-7 py-4 text-xs uppercase tracking-[0.2em] hover:bg-foreground hover:text-background">
+            <Link to="/socials" className="border border-foreground px-7 py-4 text-xs uppercase tracking-[0.2em] hover:bg-foreground hover:text-background">
               Latest posts
             </Link>
           </div>
@@ -61,7 +61,7 @@ function Index() {
         <section className="pt-24">
           <div className="flex items-end justify-between">
             <SectionTitle eyebrow="Auto-updated" title="Latest posts" />
-            <Link to="/feed" className="mb-10 text-xs uppercase tracking-[0.2em] text-gold-deep">All →</Link>
+            <Link to="/socials" className="mb-10 text-xs uppercase tracking-[0.2em] text-gold-deep">All →</Link>
           </div>
           {posts.length ? (
             <div className="grid gap-6 sm:grid-cols-3">

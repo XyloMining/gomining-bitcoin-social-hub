@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PlatformFeed } from "@/components/PlatformFeed";
 
-export const Route = createFileRoute("/feed/instagram")({
+export const Route = createFileRoute("/socials/instagram")({
   head: () => ({
     meta: [
       { title: "Instagram videos | Xylo Mining" },
