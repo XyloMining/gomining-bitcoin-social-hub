@@ -4,7 +4,7 @@ import { Header, Footer, SectionTitle } from "@/components/SiteChrome";
 import { fmtCount, isStatsFile, total, type StatsFile } from "@/lib/stats";
 
 const TITLE = "Channel Stats: Views, Likes and Followers | Xylo Mining";
-const DESC = "Total views, likes and followers across the Xylo Mining YouTube and TikTok channels, updated from the platforms' own public numbers.";
+const DESC = "Total views, likes and followers across every Xylo Mining channel (YouTube, TikTok, Instagram, Reddit and X), updated from the platforms' own public numbers.";
 
 export const Route = createFileRoute("/stats")({
   head: () => ({
@@ -97,7 +97,7 @@ function Data({ file }: { file: StatsFile }) {
           </table>
         </div>
         <p className="mt-4 max-w-2xl text-xs text-muted-foreground">
-          Last updated {updated}. These are the numbers the platforms show publicly. "n/a" means that platform does not publish that total. YouTube does not give a channel-wide likes total.
+          Last updated {updated}. These are the numbers the platforms show publicly. "n/a" means that platform does not publish that total. YouTube does not give a channel-wide likes total, and Reddit's figure is total karma.
         </p>
       </section>
     </>

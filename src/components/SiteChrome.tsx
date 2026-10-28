@@ -4,15 +4,14 @@ import { Menu, X } from "lucide-react";
 import { BRAND, socials } from "@/lib/site";
 import { ThemeToggle } from "./ThemeToggle";
 
-const NAV = [
-  { to: "/socials", label: "Socials" },
-  { to: "/articles", label: "Articles" },
-  { to: "/guides", label: "Guides" },
-  { to: "/calculator", label: "Calculator" },
-  { to: "/results", label: "My results" },
-  { to: "/stats", label: "Stats" },
-  { to: "/referrals", label: "Referrals" },
+/** The mobile menu groups the pages; the desktop bar shows them flat in the same order. */
+const GROUPS = [
+  { title: "Follow", items: [{ to: "/socials/", label: "Socials" }, { to: "/articles/", label: "Articles" }] },
+  { title: "Learn", items: [{ to: "/guides/", label: "Guides" }, { to: "/calculator/", label: "Calculator" }] },
+  { title: "My numbers", items: [{ to: "/results/", label: "My results" }, { to: "/stats/", label: "Stats" }] },
+  { title: "Support", items: [{ to: "/referrals/", label: "Referrals" }] },
 ] as const;
+const NAV = GROUPS.flatMap((g) => [...g.items]);
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -50,21 +49,38 @@ export function Header() {
         </div>
       </div>
       {open && (
-        <nav id="mobile-menu" aria-label="Mobile menu" className="border-t border-border lg:hidden">
-          <ul className="mx-auto max-w-6xl px-5 py-2">
-            {NAV.map((n) => (
-              <li key={n.to} className="border-b border-border last:border-b-0">
-                <Link
-                  to={n.to}
-                  onClick={() => setOpen(false)}
-                  className="block py-4 text-sm uppercase tracking-[0.2em] text-muted-foreground"
-                  activeProps={{ className: "text-foreground" }}
-                >
-                  {n.label}
-                </Link>
-              </li>
+        <nav id="mobile-menu" aria-label="Mobile menu" className="max-h-[calc(100dvh-4.5rem)] overflow-y-auto border-t border-border lg:hidden">
+          <div className="mx-auto max-w-6xl space-y-6 px-5 py-6">
+            {GROUPS.map((g) => (
+              <section key={g.title} aria-labelledby={`menu-${g.title}`}>
+                <h2 id={`menu-${g.title}`} className="eyebrow mb-1">{g.title}</h2>
+                <ul>
+                  {g.items.map((n) => (
+                    <li key={n.to} className="border-b border-border last:border-b-0">
+                      <Link
+                        to={n.to}
+                        onClick={() => setOpen(false)}
+                        className="block py-3.5 font-display text-2xl text-muted-foreground"
+                        activeProps={{ className: "text-foreground" }}
+                      >
+                        {n.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </section>
             ))}
-          </ul>
+            <section aria-labelledby="menu-find">
+              <h2 id="menu-find" className="eyebrow mb-3">Find me on</h2>
+              <ul className="flex flex-wrap gap-x-5 gap-y-2">
+                {socials.map((s) => (
+                  <li key={s.name}>
+                    <a href={s.url} target="_blank" rel="noreferrer" className="text-sm text-muted-foreground hover:text-gold-deep">{s.name}</a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </div>
         </nav>
       )}
     </header>
