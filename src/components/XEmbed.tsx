@@ -32,7 +32,7 @@ function loadWidgets() {
 }
 
 /**
- * X's official follow button and profile timeline (the markup X gives at publish.x.com).
+ * X's official profile timeline (the markup X gives at publish.x.com, used as given).
  * If the timeline does not appear within a few seconds (blocked script, ad blocker, X not serving it),
  * a short note and a link to the profile are shown instead.
  */
@@ -44,11 +44,8 @@ export function XEmbed() {
     let off = false;
     const el = ref.current;
     if (!el) return;
-    const dark = document.documentElement.classList.contains("dark");
-    const url = `https://x.com/${HANDLE}?ref_src=twsrc%5Etfw`;
-    el.innerHTML =
-      `<a class="twitter-follow-button" data-show-count="false" data-dnt="true" data-theme="${dark ? "dark" : "light"}" href="${url}">Follow @${HANDLE}</a>` +
-      `<a class="twitter-timeline" data-height="700" data-dnt="true" data-chrome="noheader nofooter transparent" data-theme="${dark ? "dark" : "light"}" href="${url}">Posts by ${HANDLE}</a>`;
+    // X's own embed code, unchanged: <a class="twitter-timeline" href="https://x.com/Xylo_Mining?ref_src=twsrc%5Etfw">Posts by Xylo_Mining</a>
+    el.innerHTML = `<a class="twitter-timeline" href="https://x.com/${HANDLE}?ref_src=twsrc%5Etfw">Posts by ${HANDLE}</a>`;
     const timer = setInterval(() => {
       if (el.querySelector("iframe")) { setState("ok"); clearInterval(timer); clearTimeout(giveUp); }
     }, 300);
