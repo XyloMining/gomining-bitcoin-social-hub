@@ -1,8 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { PlatformFeed } from "@/components/PlatformFeed";
-import { XProfileLink } from "@/components/XProfileLink";
-import { postsQuery } from "@/lib/posts-query";
+import { XEmbed } from "@/components/XEmbed";
 
 export const Route = createFileRoute("/socials/x")({
   head: () => ({
@@ -15,16 +13,10 @@ export const Route = createFileRoute("/socials/x")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: XTab,
-});
-
-function XTab() {
-  const { data } = useSuspenseQuery(postsQuery);
-  const has = data.some((p) => p.platform === "X");
-  return (
+  component: () => (
     <div className="space-y-12">
       <PlatformFeed platform="X" emptyNote={null} />
-      <XProfileLink empty={!has} />
+      <XEmbed />
     </div>
-  );
-}
+  ),
+});
