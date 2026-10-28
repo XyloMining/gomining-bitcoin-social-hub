@@ -15,6 +15,12 @@ describe("stats", () => {
     expect(isStatsFile({ updated: "x", platforms: [p({ views: -1 })] })).toBe(false);
     expect(isStatsFile({ platforms: [] })).toBe(false);
   });
+  it("keeps Reddit karma out of the likes total and accepts it as an optional field", () => {
+    const ps = [p({ platform: "TikTok", likes: 33 }), p({ platform: "Reddit", likes: null, karma: 2900 })];
+    expect(total(ps, "likes")).toBe(33);
+    expect(isStatsFile({ updated: "x", platforms: ps })).toBe(true);
+    expect(isStatsFile({ updated: "x", platforms: [p({ karma: -5 })] })).toBe(false);
+  });
   it("formats counts", () => {
     expect(fmtCount(null)).toBe("n/a");
     expect(fmtCount(1234)).toBe("1,234");

@@ -86,6 +86,7 @@ function Data({ file }: { file: StatsFile }) {
                   <th scope="row" className="p-3 text-left font-normal">
                     {p.platform}
                     {p.handle && <span className="block text-xs text-muted-foreground">{p.handle}</span>}
+                    {p.karma != null && <span className="block text-xs text-muted-foreground">{fmtCount(p.karma)} karma (upvotes)</span>}
                   </th>
                   <td className="p-3 text-right">{fmtCount(p.followers)}</td>
                   <td className="p-3 text-right">{fmtCount(p.views)}</td>
@@ -97,7 +98,7 @@ function Data({ file }: { file: StatsFile }) {
           </table>
         </div>
         <p className="mt-4 max-w-2xl text-xs text-muted-foreground">
-          Last updated {updated}. These are the numbers the platforms show publicly. "n/a" means that platform does not publish that total. YouTube does not give a channel-wide likes total, and Reddit's figure is total karma.
+          Last updated {updated}. These are the numbers the platforms show publicly. "n/a" means that platform does not publish that total. YouTube does not give a channel-wide likes total, and Reddit shows karma (upvotes) under its name instead of likes, so it is not in the likes total.
         </p>
       </section>
     </>

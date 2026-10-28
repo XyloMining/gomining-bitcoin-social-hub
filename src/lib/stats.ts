@@ -6,6 +6,8 @@ export type PlatformStats = {
   /** null where the platform does not give a public total (YouTube channel likes). */
   likes: number | null;
   videos: number | null;
+  /** Reddit only: account karma (upvotes). Shown on its own row and never added into the likes total. */
+  karma?: number | null;
 };
 
 export type StatsFile = { updated: string; platforms: PlatformStats[] };
@@ -16,7 +18,7 @@ export function isStatsFile(d: unknown): d is StatsFile {
   const f = d as StatsFile;
   return (
     !!f && typeof f.updated === "string" && Array.isArray(f.platforms) &&
-    f.platforms.every((p) => typeof p?.platform === "string" && num(p.followers) && num(p.views) && num(p.likes) && num(p.videos))
+    f.platforms.every((p) => typeof p?.platform === "string" && num(p.followers) && num(p.views) && num(p.likes) && num(p.videos) && (p.karma === undefined || num(p.karma)))
   );
 }
 
