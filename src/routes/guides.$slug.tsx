@@ -97,7 +97,8 @@ function GuidePage() {
                 Join GoMining with my link
               </a>
               <p className="mt-3 text-sm text-muted-foreground">Referral code: <span className="font-mono">{referrals[0].code}</span></p>
-              <p className="mt-3 text-xs text-muted-foreground">{g.referral.note}</p>
+              <p className="mt-3 text-xs text-muted-foreground">Terms last updated {new Date(g.referral.termsUpdated).toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" })}, as shown on GoMining's referral page. Check GoMining for the current terms.</p>
+              <p className="mt-2 text-xs text-muted-foreground">{g.referral.note}</p>
             </aside>
           )}
 

@@ -13,7 +13,7 @@ export type Guide = {
   sources: { label: string; url: string }[];
   related: string[];
   /** Optional referral call-to-action, rendered with a disclosure. */
-  referral?: { heading: string; intro: string; benefits: { title: string; detail: string }[]; note: string };
+  referral?: { termsUpdated: string; /* ISO date the terms were last checked */ heading: string; intro: string; benefits: { title: string; detail: string }[]; note: string };
 };
 
 const BTC_GUIDE = { label: "Bitcoin developer guide: mining", url: "https://bitcoin.org/en/developer-guide#mining" };
@@ -370,7 +370,7 @@ export const guides: Guide[] = [
       {
         heading: "What a referral link gives new users",
         paragraphs: [
-          "GoMining's referral page lists what a referred friend receives. Each bonus has a time window that starts at registration, so use the link when you first sign up. GoMining describes referral rewards as a promo mechanic whose sizes and terms may change, so check its Referral Program page and Terms of Use for the current terms.",
+          "GoMining's referral page lists what a referred friend receives. Each bonus has a time window that starts at registration, so use the link when you first sign up. The terms below were last checked on 30 October 2026. GoMining describes referral rewards as a promo mechanic whose sizes and terms may change, so check its Referral Program page and Terms of Use for the current terms.",
         ],
         list: [
           "5% bonus in TH on your first miner, within 30 days after registration, up to 25 TH.",
@@ -398,6 +398,7 @@ export const guides: Guide[] = [
     ],
     related: ["what-are-gomining-digital-miners", "understanding-hashrate-and-w-th", "how-mining-maintenance-fees-work", "how-to-calculate-bitcoin-mining-profitability"],
     referral: {
+      termsUpdated: "2026-10-30",
       heading: "Start with my GoMining referral",
       intro: "Sign up through my link to get the new-user bonuses below.",
       benefits: [
