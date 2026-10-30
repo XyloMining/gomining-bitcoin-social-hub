@@ -19,11 +19,6 @@
  */
 
 /* Fonts are hosted on this site (no request to Google). Latin subset only. SIL Open Font License. */
-@font-face { font-family: "Cormorant Garamond"; font-style: normal; font-weight: 400; font-display: swap; src: url(/fonts/cormorant-garamond-latin-400-normal.woff2) format("woff2"); }
-@font-face { font-family: "Cormorant Garamond"; font-style: normal; font-weight: 500; font-display: swap; src: url(/fonts/cormorant-garamond-latin-500-normal.woff2) format("woff2"); }
-@font-face { font-family: "Cormorant Garamond"; font-style: italic; font-weight: 500; font-display: swap; src: url(/fonts/cormorant-garamond-latin-500-italic.woff2) format("woff2"); }
-@font-face { font-family: "Karla"; font-style: normal; font-weight: 400; font-display: swap; src: url(/fonts/karla-latin-400-normal.woff2) format("woff2"); }
-@font-face { font-family: "Karla"; font-style: normal; font-weight: 500; font-display: swap; src: url(/fonts/karla-latin-500-normal.woff2) format("woff2"); }
 @font-face { font-family: "Inter"; font-style: normal; font-weight: 400; font-display: swap; src: url(/fonts/inter-latin-400-normal.woff2) format("woff2"); }
 @font-face { font-family: "Inter"; font-style: normal; font-weight: 500; font-display: swap; src: url(/fonts/inter-latin-500-normal.woff2) format("woff2"); }
 @font-face { font-family: "Inter"; font-style: normal; font-weight: 600; font-display: swap; src: url(/fonts/inter-latin-600-normal.woff2) format("woff2"); }
@@ -57,8 +52,8 @@
   --color-ring: var(--ring);
   --color-gold: var(--gold);
   --color-gold-deep: var(--gold-deep);
-  --font-display: "Cormorant Garamond", serif;
-  --font-sans: "Karla", sans-serif;
+  --font-display: "Inter", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
   --color-ring-offset-background: var(--background);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
@@ -167,14 +162,7 @@
   h1, h2, h3 { font-family: var(--font-display); font-weight: 500; letter-spacing: -0.01em; }
 }
 
-/* Phones use Inter for everything. Desktop keeps Cormorant Garamond and Karla. Only the fonts
-   a device actually uses are downloaded, and the preload hints in __root.tsx match this width. */
-@media (max-width: 767px) {
-  :root {
-    --font-display: "Inter", system-ui, sans-serif;
-    --font-sans: "Inter", system-ui, sans-serif;
-  }
-  /* Tailwind copies the font name into its utilities, so they need the override too. */
-  .font-display, .font-sans { font-family: "Inter", system-ui, sans-serif; }
-  h1, h2, h3 { letter-spacing: -0.025em; }
-}
+/* Inter on every screen size, so desktop matches mobile. Tailwind copies the font name into its
+   utilities, so they get the override too. */
+.font-display, .font-sans { font-family: "Inter", system-ui, sans-serif; }
+h1, h2, h3 { letter-spacing: -0.025em; }
