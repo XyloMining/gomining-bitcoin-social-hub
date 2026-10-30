@@ -374,7 +374,7 @@ export const guides: Guide[] = [
         ],
         list: [
           "5% bonus in TH on your first miner, within 30 days after registration, up to 25 TH.",
-          "20 dollars in TH for the first 100 dollars spent using the GoMining card, within 90 days after registration.",
+          "$20 in TH for the first $100 spent using the GoMining card, within 90 days after registration.",
           "1 month of Platinum+, within 30 days after registration.",
         ],
       },
@@ -402,7 +402,7 @@ export const guides: Guide[] = [
       intro: "Sign up through my link to get the new-user bonuses below.",
       benefits: [
         { title: "5% bonus TH on your first miner", detail: "Within 30 days after registration, up to 25 TH." },
-        { title: "TH for card spending", detail: "20 dollars in TH for the first 100 dollars spent using the card, within 90 days after registration." },
+        { title: "TH for card spending", detail: "$20 in TH for the first $100 spent using the card, within 90 days after registration." },
         { title: "1 month of Platinum+", detail: "Within 30 days after registration." },
       ],
       note: "Referral link disclosure: I earn rewards from GoMining if you join through it. Bonuses and terms are GoMining's, may change, and depend on eligibility and region. Not financial advice.",
