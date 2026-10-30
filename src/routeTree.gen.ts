@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as ArticlesRouteImport } from './routes/articles'
 import { Route as CalculatorRouteImport } from './routes/calculator'
 import { Route as ReferralsRouteImport } from './routes/referrals'
@@ -28,6 +29,11 @@ import { Route as SocialsYoutubeRouteImport } from './routes/socials.youtube'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ArticlesRoute = ArticlesRouteImport.update({
@@ -103,6 +109,7 @@ const SocialsYoutubeRoute = SocialsYoutubeRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/articles': typeof ArticlesRoute
   '/calculator': typeof CalculatorRoute
   '/referrals': typeof ReferralsRoute
@@ -120,6 +127,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/articles': typeof ArticlesRoute
   '/calculator': typeof CalculatorRoute
   '/referrals': typeof ReferralsRoute
@@ -137,6 +145,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/articles': typeof ArticlesRoute
   '/calculator': typeof CalculatorRoute
   '/referrals': typeof ReferralsRoute
@@ -156,6 +165,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/articles'
     | '/calculator'
     | '/referrals'
@@ -173,6 +183,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/articles'
     | '/calculator'
     | '/referrals'
@@ -189,6 +200,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/about'
     | '/articles'
     | '/calculator'
     | '/referrals'
@@ -207,6 +219,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
   ArticlesRoute: typeof ArticlesRoute
   CalculatorRoute: typeof CalculatorRoute
   ReferralsRoute: typeof ReferralsRoute
@@ -224,6 +237,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/articles': {
@@ -350,6 +370,7 @@ const SocialsRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
   ArticlesRoute: ArticlesRoute,
   CalculatorRoute: CalculatorRoute,
   ReferralsRoute: ReferralsRoute,

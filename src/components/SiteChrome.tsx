@@ -6,7 +6,7 @@ import { ThemeToggle } from "./ThemeToggle";
 
 /** The mobile menu groups the pages; the desktop bar shows them flat in the same order. */
 const GROUPS = [
-  { title: "Follow", items: [{ to: "/socials/", label: "Socials" }, { to: "/articles/", label: "Articles" }] },
+  { title: "Follow", items: [{ to: "/about/", label: "About" }, { to: "/socials/", label: "Socials" }, { to: "/articles/", label: "Articles" }] },
   { title: "Learn", items: [{ to: "/guides/", label: "Guides" }, { to: "/calculator/", label: "Calculator" }] },
   { title: "My numbers", items: [{ to: "/results/", label: "My results" }, { to: "/stats/", label: "Stats" }] },
   { title: "Get started", items: [{ to: "/referrals/", label: "Referrals" }] },
