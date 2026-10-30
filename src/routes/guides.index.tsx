@@ -23,7 +23,7 @@ export const Route = createFileRoute("/guides/")({
         "@type": "CollectionPage",
         name: "Bitcoin mining guides",
         url: "https://xylomining.github.io/guides/",
-        hasPart: guides.map((g) => ({ "@type": "Article", headline: g.title, url: `https://xylomining.github.io/guides/${g.slug}/` })),
+        hasPart: guides.filter((g) => !g.home).map((g) => ({ "@type": "Article", headline: g.title, url: `https://xylomining.github.io/guides/${g.slug}/` })),
       }),
     }],
   }),
@@ -32,7 +32,8 @@ export const Route = createFileRoute("/guides/")({
 
 function Guides() {
   const [q, setQ] = useState("");
-  const results = searchGuides(q);
+  const results = searchGuides(q).filter((g) => !g.home);
+  const total = guides.filter((g) => !g.home).length;
   return (
     <div className="min-h-screen">
       <Header />
@@ -45,7 +46,7 @@ function Guides() {
           className="mt-2 w-full max-w-xl border border-border bg-background px-4 py-3 text-lg outline-none focus:border-gold"
         />
         <p className="mt-3 text-sm text-muted-foreground" aria-live="polite">
-          {results.length} of {guides.length} guides{q.trim() ? ` match "${q.trim()}"` : ""}
+          {results.length} of {total} guides{q.trim() ? ` match "${q.trim()}"` : ""}
         </p>
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {results.map((g) => (

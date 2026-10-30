@@ -12,6 +12,8 @@ export type Guide = {
   faq: { q: string; a: string }[];
   sources: { label: string; url: string }[];
   related: string[];
+  /** Featured on the home page instead of the guides list. */
+  home?: boolean;
   /** Optional referral call-to-action, rendered with a disclosure. */
   referral?: { termsUpdated: string; /* ISO date the terms were last checked */ heading: string; intro: string; benefits: { title: string; detail: string }[]; note: string };
 };
@@ -326,6 +328,7 @@ export const guides: Guide[] = [
   },
   {
     slug: "gomining-quickstart",
+    home: true,
     title: "GoMining Quickstart Guide for Beginners",
     description:
       "A plain-English quickstart to GoMining: what it is, how to get started, what to check before buying, and the bonuses a referral link gives new users.",
