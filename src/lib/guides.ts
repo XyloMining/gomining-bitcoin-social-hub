@@ -12,6 +12,8 @@ export type Guide = {
   faq: { q: string; a: string }[];
   sources: { label: string; url: string }[];
   related: string[];
+  /** Optional referral call-to-action, rendered with a disclosure. */
+  referral?: { heading: string; intro: string; benefits: { title: string; detail: string }[]; note: string };
 };
 
 const BTC_GUIDE = { label: "Bitcoin developer guide: mining", url: "https://bitcoin.org/en/developer-guide#mining" };
@@ -321,6 +323,90 @@ export const guides: Guide[] = [
     ],
     sources: [BTC_GUIDE, { label: "Blockstream glossary: halving", url: "https://help.blockstream.com/education/glossary/halving" }],
     related: ["bitcoin-mining-difficulty-explained", "how-mining-maintenance-fees-work"],
+  },
+  {
+    slug: "gomining-quickstart",
+    title: "GoMining Quickstart Guide for Beginners",
+    description:
+      "A plain-English quickstart to GoMining: what it is, how to get started, what to check before buying, and the bonuses a referral link gives new users.",
+    summary: "What GoMining is, the steps to get started, the risks to weigh first, and what a referral link adds for new users.",
+    keywords: ["gomining", "gomining quickstart", "gomining referral", "gomining referral code", "gomining bonus", "digital miner", "Platinum+", "getting started"],
+    updated: "2026-10-30",
+    readingMinutes: 5,
+    takeaways: [
+      "GoMining sells Digital Miners: tokenised shares of Bitcoin mining power measured in TH, with a maintenance fee that is part of the cost.",
+      "Learn the basics first (TH, W/TH, fees, difficulty) and run your own numbers before you spend anything. Returns are not guaranteed and can be negative.",
+      "New users who sign up with a referral link can get a 5% TH bonus on a first miner, TH for card spending, and one month of Platinum+. Terms are GoMining's and can change.",
+    ],
+    sections: [
+      {
+        heading: "What GoMining is",
+        paragraphs: [
+          "GoMining is a platform where you buy Digital Miners, tokenised ownership of Bitcoin mining capacity measured in terahash (TH). A miner earns a share of Bitcoin mining rewards, and you pay a maintenance fee for the electricity and service that keeps it running.",
+          "It is not the same as owning and running your own hardware, and it is not a savings account. What you earn depends on Bitcoin's price, network difficulty and the fees you pay.",
+        ],
+      },
+      {
+        heading: "Before you start: learn the four numbers",
+        paragraphs: ["Four ideas explain most of what you will see in the app. Each has its own guide on this site."],
+        list: [
+          "TH (terahash) is the size of your mining power, and W/TH is how much electricity each TH uses.",
+          "The maintenance fee is charged against your rewards, so a higher fee leaves less for you.",
+          "Difficulty rises as more miners join the network, which shrinks each miner's share.",
+          "Break-even price is the Bitcoin price at which you earn nothing after fees.",
+        ],
+      },
+      {
+        heading: "Getting started, step by step",
+        paragraphs: ["The exact screens change, so follow what GoMining shows you. The order below is the sensible one."],
+        list: [
+          "Create your account from a referral link so the new-user bonuses can be attached, and enter the code if you are asked.",
+          "Check which products are available where you live. GoMining says products and features are subject to eligibility, its terms and regional availability.",
+          "Read the miner's TH, W/TH and maintenance fee on the listing, then run them through the mining calculator on this site.",
+          "Start small. Only use money you could afford to lose, because the price of Bitcoin can fall and fees continue either way.",
+          "Complete any verification the platform asks for, and keep your login and recovery details secure.",
+        ],
+      },
+      {
+        heading: "What a referral link gives new users",
+        paragraphs: [
+          "GoMining's referral page lists what a referred friend receives. Each bonus has a time window that starts at registration, so use the link when you first sign up. GoMining describes referral rewards as a promo mechanic whose sizes and terms may change, so check its Referral Program page and Terms of Use for the current terms.",
+        ],
+        list: [
+          "5% bonus in TH on your first miner, within 30 days after registration, up to 25 TH.",
+          "20 dollars in TH for the first 100 dollars spent using the GoMining card, within 90 days after registration.",
+          "1 month of Platinum+, within 30 days after registration.",
+        ],
+      },
+      {
+        heading: "Risks to keep in mind",
+        paragraphs: [
+          "Mining returns move with Bitcoin's price, difficulty and fees, and can be lower than your costs. Bonus TH adds mining power, but it does not remove those risks. Nothing on this page is financial advice or a promise of return.",
+        ],
+      },
+    ],
+    faq: [
+      { q: "Do I have to use a referral link?", a: "No. A link is optional, but the new-user bonuses are tied to signing up with one, and the time windows start at registration." },
+      { q: "Does the referral link cost me anything extra?", a: "GoMining does not list a charge for using a link. Normal product prices and maintenance fees still apply." },
+      { q: "Is GoMining guaranteed to be profitable?", a: "No. Returns depend on Bitcoin's price, difficulty and fees, and can be negative." },
+      { q: "What do you get from the referral?", a: "I am a GoMining referrer, so I may earn rewards when people sign up through my link. That is why this is disclosed, and why you should compare it with your own research." },
+    ],
+    sources: [
+      { label: "GoMining: Become a True GoMining Partner (referral program, 16 Jul 2026)", url: "https://gomining.com/blog/gomining-partner" },
+      { label: "GoMining: Updated 5+5+5 Referral Program (earlier version)", url: "https://gomining.com/blog/updated-5-5-5-referral-program" },
+      { label: "GoMining referral page: new-user bonus terms (as shown to the site owner on 30 Oct 2026)", url: "https://gomining.com/" },
+    ],
+    related: ["what-are-gomining-digital-miners", "understanding-hashrate-and-w-th", "how-mining-maintenance-fees-work", "how-to-calculate-bitcoin-mining-profitability"],
+    referral: {
+      heading: "Start with my GoMining referral",
+      intro: "Sign up through my link to get the new-user bonuses below.",
+      benefits: [
+        { title: "5% bonus TH on your first miner", detail: "Within 30 days after registration, up to 25 TH." },
+        { title: "TH for card spending", detail: "20 dollars in TH for the first 100 dollars spent using the card, within 90 days after registration." },
+        { title: "1 month of Platinum+", detail: "Within 30 days after registration." },
+      ],
+      note: "Referral link disclosure: I earn rewards from GoMining if you join through it. Bonuses and terms are GoMining's, may change, and depend on eligibility and region. Not financial advice.",
+    },
   },
 ];
 

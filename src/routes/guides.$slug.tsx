@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Header, Footer } from "@/components/SiteChrome";
 import { getGuide, guides } from "@/lib/guides";
+import { referrals } from "@/lib/site";
 
 const ORIGIN = "https://xylomining.github.io";
 
@@ -81,6 +82,24 @@ function GuidePage() {
               {s.list && <ul className="mt-4 list-disc space-y-2 pl-5">{s.list.map((l) => <li key={l}>{l}</li>)}</ul>}
             </section>
           ))}
+
+          {g.referral && (
+            <aside className="mt-10 border border-gold bg-card p-6" aria-labelledby="referral-cta">
+              <p className="eyebrow">Referral</p>
+              <h2 id="referral-cta" className="mt-2 text-2xl">{g.referral.heading}</h2>
+              <p className="mt-2 text-muted-foreground">{g.referral.intro}</p>
+              <ul className="mt-4 space-y-3">
+                {g.referral.benefits.map((b) => (
+                  <li key={b.title}><span className="font-medium">{b.title}</span><br /><span className="text-sm text-muted-foreground">{b.detail}</span></li>
+                ))}
+              </ul>
+              <a href={referrals[0].url} target="_blank" rel="noopener noreferrer sponsored" className="mt-5 inline-block border border-gold bg-gold px-5 py-3 font-medium text-black">
+                Join GoMining with my link
+              </a>
+              <p className="mt-3 text-sm text-muted-foreground">Referral code: <span className="font-mono">{referrals[0].code}</span></p>
+              <p className="mt-3 text-xs text-muted-foreground">{g.referral.note}</p>
+            </aside>
+          )}
 
           <section className="pt-12">
             <h2 className="text-3xl">Frequently asked questions</h2>
