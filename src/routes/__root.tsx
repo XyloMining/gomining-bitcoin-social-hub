@@ -109,6 +109,13 @@ function RootShell({ children }: { children: ReactNode }) {
         <HeadContent />
         {/* Google AdSense auto ads */}
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3804011887904186" crossOrigin="anonymous" />
+        {/* Linkvertise publisher script (account 10151711) */}
+        <script src="https://publisher.linkvertise.com/cdn/linkvertise.js" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `linkvertise(10151711, {whitelist: [], blacklist: []});`,
+          }}
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.classList.toggle('dark',d)}catch(e){}})()`,
